@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asistente TOOLI-UTB</title>
+  <style>
+    :root{
+      /* Paleta aproximada tomada de la UI TOOLI de la captura */
+      --blue-900:#0b3f91;   /* barra superior */
+      --blue-800:#114da0;   /* primario botones */
+      --blue-700:#1e63d6;   /* acento hover */
+      --blue-100:#e8f0ff;   /* fondos suaves */
+      --blue-050:#f5f8ff;   /* panel background */
+      --gray-900:#101828;
+      --gray-700:#344054;
+      --gray-500:#667085;
+      --gray-300:#d0d5dd;
+      --gray-200:#eaecf0;
+      --white:#ffffff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family: "Aptos", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;background:var(--blue-050);color:var(--gray-900)}
+    .topbar{background:var(--blue-900);color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px;}
+    .dot{width:10px;height:10px;border-radius:50%;background:#7dd3fc;box-shadow:0 0 12px #7dd3fc}
+    .title{font-weight:700;letter-spacing:.2px}
+    .app{max-width:920px;margin:24px auto;padding:0 16px}
+    .card{background:var(--white);border:1px solid var(--gray-200);border-radius:16px;box-shadow:0 6px 20px rgba(16,24,40,.04)}
+    .panel{display:grid;grid-template-rows:1fr auto;height:min(72vh,800px)}
+    .messages{padding:18px;overflow:auto;scroll-behavior:smooth}
+    .empty{color:var(--gray-500);text-align:center;margin-top:24px}
+    .row{display:flex;gap:10px;margin:10px 0;align-items:flex-end}
+    .row.user{justify-content:flex-end}
+    .bubble{max-width:70%;padding:12px 14px;border-radius:14px;font-size:15px;line-height:1.35;border:1px solid var(--gray-200)}
+    .user .bubble{background:var(--blue-100);border-color:#c8dbff}
+    .bot .bubble{background:#fff}
+    .meta{font-size:12px;color:var(--gray-500);margin-top:4px}
+    .inputbar{display:flex;gap:10px;padding:12px;border-top:1px solid var(--gray-200);background:#fff;border-radius:0 0 16px 16px}
+    .field{flex:1;display:flex;align-items:center;border:1px solid var(--gray-300);border-radius:12px;padding:10px 12px;background:#fff}
+    .field input{flex:1;border:0;outline:none;font-size:15px}
+    .btn{background:var(--blue-800);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-weight:600;cursor:pointer}
+    .btn:hover{background:var(--blue-700)}
+    .badge{display:inline-flex;align-items:center;gap:8px;background:#eef4ff;color:var(--blue-800);border:1px solid #d8e5ff;border-radius:999px;padding:6px 10px;font-size:12px;margin:12px 16px}
+    .status{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.15)}
+    .footer{color:var(--gray-500);font-size:12px;text-align:center;margin:10px 0}
+    .mini{font-size:12px;color:var(--gray-500)}
+    code.inline{background:#f2f4f7;border:1px solid var(--gray-200);padding:.15rem .35rem;border-radius:6px}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <span class="dot" aria-hidden="true"></span>
+    <div class="title">Asistente TOOLI · UTB</div>
+  </header>
+
+  <main class="app">
+    <section class="card panel" role="region" aria-label="Chat de asistencia">
+      <div class="badge"><span class="status"></span> Conectado · API <span id="apiStatus">verificando…</span></div>
+      <div id="messages" class="messages" aria-live="polite">
+        <div class="empty">Inicia una conversación sobre <b>TOOLI</b>. Por ejemplo: <em>¿Cuál es el estado de mi último ticket?</em></div>
+      </div>
+      <form id="chatForm" class="inputbar" autocomplete="off">
+        <label class="field" aria-label="Escribe tu mensaje">
+          <input id="prompt" type="text" placeholder="Escribe tu mensaje…" required />
+        </label>
+        <button class="btn" type="submit">Enviar</button>
+      </form>
+    </section>
+    <p class="footer">MVP · Restringido a consultas de TOOLI (GLPI UTB)</p>
+  </main>
+
+  <script>
+    // ======= Config =======
+    // Si sirves este HTML desde el mismo host/puerto que la API, deja cadena vacía
+    const API_BASE = ""; // ej: "http://18.217.144.149:8080" si lo sirves aparte
+
+    const elForm = document.getElementById('chatForm');
+    const elInput = document.getElementById('prompt');
+    const elMsgs = document.getElementById('messages');
+    const elApiStatus = document.getElementById('apiStatus');
+
+    async function ping(){
+      try{
+        const r = await fetch(`${API_BASE}/healthz`);
+        if(!r.ok) throw new Error('offline');
+        const j = await r.json();
+        elApiStatus.textContent = j.model || 'OK';
+      }catch(e){ elApiStatus.textContent = 'offline'; }
+    }
+    ping();
+
+    function addMsg(role, text){
+      if(elMsgs.querySelector('.empty')) elMsgs.innerHTML = '';
+      const row = document.createElement('div');
+      row.className = `row ${role}`;
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.innerHTML = text;
+      row.appendChild(bubble);
+      elMsgs.appendChild(row);
+      elMsgs.scrollTop = elMsgs.scrollHeight;
+    }
+
+    function formatReply(data){
+      if(data.mode && data.mode.startsWith('tool_call')){
+        const name = data.tool_result?.ok ? '<b>Acción</b>: ' + (data.tool_result?.resumen || '') : 'Llamada de herramienta';
+        const raw = data.model_raw ? `<div class="mini">modelo: <code class="inline">${escapeHtml(data.model_raw)}</code></div>`: '';
+        return `${name}${raw}`;
+      }
+      if(data.reply){ return escapeHtml(data.reply); }
+      return escapeHtml(JSON.stringify(data));
+    }
+
+    function escapeHtml(str){
+      return String(str).replace(/[&<>\"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
+    }
+
+    elForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const text = elInput.value.trim();
+      if(!text) return;
+      addMsg('user', escapeHtml(text));
+      elInput.value = '';
+      const waitId = `wait-${Date.now()}`;
+      addMsg('bot', `<span id="${waitId}">Pensando…</span>`);
+      try{
+        const r = await fetch(`${API_BASE}/chat`,{
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({message:text})
+        });
+        const j = await r.json();
+        document.getElementById(waitId).parentElement.innerHTML = formatReply(j);
+      }catch(err){
+        document.getElementById(waitId).parentElement.innerHTML = 'Error al conectar con la API.';
+      }
+    });
+  </script>
+</body>
+</html>
