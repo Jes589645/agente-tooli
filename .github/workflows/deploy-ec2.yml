@@ -1,0 +1,35 @@
+name: Deploy to EC2 via SSH
+
+on:
+  push:
+    branches:
+      - main   # se ejecuta en cada push a main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository (para tener contexto si hace falta)
+        uses: actions/checkout@v4
+
+      - name: Connect to EC2 and deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT || 22 }}
+          script: |
+            echo "Entrando al servidor..."
+            cd /home/ubuntu/agente-tooli
+
+            echo "Haciendo pull de la rama main..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "Levantando contenedores con Docker Compose..."
+            docker compose down || true
+            docker compose up -d --build
+
+            echo "Despliegue completado."
