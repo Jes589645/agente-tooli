@@ -1,9 +1,13 @@
-import os, json, httpx
-from typing import Dict, Any
+import os
+
+import httpx
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_URL = os.getenv("LLM_BASE_URL", "https://api.groq.com/openai/v1")
 API_KEY = os.getenv("LLM_API_KEY", "")
-MODEL   = os.getenv("LLM_MODEL", "llama-3.1-8b-instant")
+MODEL = os.getenv("LLM_MODEL", "llama-3.1-8b-instant")
 TEMPERATURE = float(os.getenv("TEMPERATURE", "0.2"))
 TOP_P = float(os.getenv("TOP_P", "0.9"))
 MAX_TOKENS = int(os.getenv("MAX_TOKENS", "512"))
@@ -11,6 +15,7 @@ MAX_TOKENS = int(os.getenv("MAX_TOKENS", "512"))
 SYSTEM_PROMPT_PATH = os.path.join(os.path.dirname(__file__), "prompts", "system_tooli.txt")
 with open(SYSTEM_PROMPT_PATH, "r", encoding="utf-8") as f:
     SYSTEM_PROMPT = f.read()
+
 
 async def chat_completion(user_text: str, hint_intent: str | None = None) -> str:
     """
@@ -30,7 +35,7 @@ async def chat_completion(user_text: str, hint_intent: str | None = None) -> str
         "messages": messages,
         "temperature": TEMPERATURE,
         "top_p": TOP_P,
-        "max_tokens": MAX_TOKENS
+        "max_tokens": MAX_TOKENS,
     }
 
     async with httpx.AsyncClient(timeout=60.0) as client:

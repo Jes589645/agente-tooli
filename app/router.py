@@ -8,8 +8,10 @@ from . import tools
 
 router = APIRouter()
 
+
 class ChatIn(BaseModel):
     message: str
+
 
 @router.post("/chat")
 async def chat(payload: ChatIn):
@@ -17,7 +19,14 @@ async def chat(payload: ChatIn):
     hint = guess_intent(user_text)
 
     # 1) Preguntamos al modelo
-    model_text = await chat_completion(user_text, hint_intent=hint)
+    try:
+        model_text = await chat_completion(user_text, hint_intent=hint)
+    except Exception:
+        return {
+            "mode": "error",
+            "request": user_text,
+            "error": "No se pudo consultar el modelo. Verifica LLM_API_KEY/LLM_BASE_URL/LLM_MODEL en .env.",
+        }
 
     # 2) Intentamos parsear una tool_call en JSON
     tool_result = None
@@ -32,7 +41,7 @@ async def chat(payload: ChatIn):
                 "mode": "tool_call(json)",
                 "request": user_text,
                 "model_raw": model_text,
-                "tool_result": tool_result
+                "tool_result": tool_result,
             }
     except Exception:
         pass
@@ -45,15 +54,16 @@ async def chat(payload: ChatIn):
             "mode": "tool_call(inline)",
             "request": user_text,
             "model_raw": model_text,
-            "tool_result": tool_result
+            "tool_result": tool_result,
         }
 
     # 4) Respuesta normal (texto)
     return {
         "mode": "text",
         "request": user_text,
-        "reply": model_text
+        "reply": model_text,
     }
+
 
 async def run_tool(name: str, args: dict):
     mapping = {
