@@ -1,11 +1,43 @@
-# Agente TOOLI-UTB
+.ENV SETUP
 
-## Requisitos
-- Docker y Docker Compose
-- Clave de API LLM OpenAI-compatible (ej. Groq): exporta `LLM_API_KEY`
+# =========================
+# AGENTE-TOOLI ROOT CONFIG
+# Fill in every value before deploying.
+# This file is consumed by the backend, frontend, and docker-compose setup.
+# =========================
 
-## Configuración
-1) Crea un archivo `.env` en tu reposutorio y define:
-   - LLM_API_KEY=gsk_********
-   - (opcional) LLM_BASE_URL, LLM_MODEL
+# -------------------------
+# LLM / AI provider
+# Required for backend chat responses.
+# Example providers: OpenAI-compatible endpoint, Groq, etc.
+# -------------------------
 
+LLM_API_KEY=
+LLM_BASE_URL=https://api.groq.com/openai/v1
+LLM_MODEL=llama-3.1-8b-instant
+MAX_TOKENS=512
+
+# -------------------------
+# Backend / API
+# CORS origins for local and deployed frontend URLs.
+# Separate multiple values with commas.
+# -------------------------
+ALLOWED_ORIGINS=
+
+# -------------------------
+# Supabase
+# Required by the Next.js frontend auth flow.
+# -------------------------
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_ALLOWED_EMAIL_DOMAIN=
+
+
+# -------------------------
+# GLPI integration
+# Fill these to connect TOOLI to GLPI.
+# -------------------------
+
+GLPI_API_URL=
+GLPI_APP_TOKEN=
+GLPI_USER_TOKEN=
