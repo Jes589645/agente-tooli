@@ -1,9 +1,9 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Asistente TOOLI · UTB',
-  description: 'Plataforma de soporte académico y administrativo - Universidad Tecnológica de Bolívar',
+  title: 'Agente TOOLI',
+  description: 'Asistente inteligente para soporte y operaciones.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
