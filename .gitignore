@@ -9,3 +9,4 @@ frontend/.npm-cache/
 frontend/.next/
 __pycache__/
 *.py[cod]
+backend/app/data/conversation_sessions.jsonl

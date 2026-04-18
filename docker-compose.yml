@@ -8,6 +8,8 @@ services:
       - ALLOWED_ORIGINS=http://localhost:3000,http://frontend:3000
     ports:
       - "8080:8080"
+    volumes:
+      - ./backend/app/data:/app/app/data
     restart: unless-stopped
 
   frontend:

@@ -12,6 +12,7 @@ interface ToolResult {
 
 interface ApiResponse {
   mode: string
+  session_id?: string
   request?: string
   reply?: string
   model_raw?: string
@@ -29,6 +30,7 @@ export default function DashboardPage() {
   const [userEmail, setUserEmail] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
+  const [sessionId, setSessionId] = useState('')
   const [loading, setLoading] = useState(false)
   const [apiStatus, setApiStatus] = useState('verificando...')
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -38,6 +40,7 @@ export default function DashboardPage() {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) setUserEmail(data.user.email || '')
     })
+    setSessionId(getOrCreateSessionId())
     pingApi()
   }, [])
 
@@ -63,6 +66,21 @@ export default function DashboardPage() {
     router.refresh()
   }
 
+  const getOrCreateSessionId = () => {
+    const existing = window.localStorage.getItem('tooli_session_id')
+    if (existing) return existing
+    const next = window.crypto?.randomUUID?.() || `session-${Date.now()}-${Math.random().toString(16).slice(2)}`
+    window.localStorage.setItem('tooli_session_id', next)
+    return next
+  }
+
+  const startNewChat = () => {
+    const next = window.crypto?.randomUUID?.() || `session-${Date.now()}-${Math.random().toString(16).slice(2)}`
+    window.localStorage.setItem('tooli_session_id', next)
+    setSessionId(next)
+    setMessages([])
+  }
+
   const formatReply = (data: ApiResponse): string => {
     if (data.mode?.startsWith('tool_call')) {
       if (data.tool_result?.ok) return data.tool_result.resumen || 'Accion completada.'
@@ -86,9 +104,13 @@ export default function DashboardPage() {
       const r = await fetch('/api/tooli/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ message: text, session_id: sessionId || getOrCreateSessionId() }),
       })
       const j: ApiResponse = await r.json()
+      if (j.session_id) {
+        window.localStorage.setItem('tooli_session_id', j.session_id)
+        setSessionId(j.session_id)
+      }
       setMessages(prev => [...prev, { role: 'bot', text: formatReply(j) }])
     } catch {
       setMessages(prev => [...prev, { role: 'bot', text: 'Error al conectar con la API.' }])
@@ -492,9 +514,9 @@ export default function DashboardPage() {
                 <p className="brand-copy">Workspace operacional</p>
               </div>
             </div>
-            <button className="new-chat" type="button">+ Nueva conversacion</button>
+            <button className="new-chat" type="button" onClick={startNewChat}>+ Nueva conversacion</button>
             <nav className="nav">
-              <div className="nav-item active">Resumen ejecutivo</div>
+              <div className="nav-item active">Base de conocimiento</div>
               <div className="nav-item">Tickets</div>
               <div className="nav-item">Automatizaciones</div>
               <div className="nav-item">Analitica</div>
@@ -513,7 +535,7 @@ export default function DashboardPage() {
               <div className="top-links">
                 <span>Dashboard</span>
                 <span>Tickets</span>
-                <span>Knowledge Base</span>
+                <span>Base de conocimiento</span>
                 <span>Activity</span>
               </div>
             </div>
@@ -532,8 +554,8 @@ export default function DashboardPage() {
 
           <div className="headline-row">
             <div>
-              <p className="kicker">Centro de soporte inteligente</p>
-              <h1 className="headline">Hazlo desde TOOLI</h1>
+              <p className="kicker">Centro de orientacion inteligente</p>
+              <h1 className="headline">Resuelve primero con TOOLI</h1>
             </div>
             <div className="status-badge">
               <span className="status-dot" />
@@ -544,8 +566,9 @@ export default function DashboardPage() {
           <div className="messages" aria-live="polite">
             {messages.length === 0 ? (
               <div className="empty">
-                Hola. Empieza una conversacion con TOOLI para consultar tickets, pedir
-                actualizaciones o registrar incidencias. Prueba con: <em>Cual es el estado de mi ultimo ticket?</em>
+                Hola. Empieza una conversacion con TOOLI para consultar servicios,
+                resolver dudas frecuentes o validar si un caso realmente necesita ticket.
+                Prueba con: <em>Tengo un solapamiento en mi horario de matricula</em>
               </div>
             ) : (
               messages.map((msg, i) => (
@@ -579,13 +602,13 @@ export default function DashboardPage() {
                 <span>Comandos</span>
                 <span>Plantillas</span>
                 <span className="tool-divider" />
-                <span>Pregunta a TOOLI o describe el problema...</span>
+                <span>Pregunta por un servicio o describe el problema...</span>
               </div>
               <div className="composer-main">
                 <label className="textarea-shell">
                   <input
                     type="text"
-                    placeholder="Pregunta a TOOLI o describe el problema..."
+                    placeholder="Pregunta por un servicio o describe el problema..."
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     disabled={loading}

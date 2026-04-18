@@ -1,0 +1,46 @@
+[
+  {
+    "id": "kb_ticket_policy",
+    "kind": "fact",
+    "title": "Politica de escalamiento a tickets",
+    "category": "tooli",
+    "keywords": [
+      "ticket",
+      "crear ticket",
+      "generar ticket",
+      "incidencia",
+      "escalar",
+      "glpi"
+    ],
+    "answer": "TOOLI debe intentar orientar al usuario con la base de conocimiento antes de crear un ticket. El ticket se reserva para casos donde la informacion disponible no resuelve el caso, se requiere revision humana, hay datos personales o academicos que validar, o el usuario confirma que desea escalar despues de recibir la orientacion inicial.",
+    "next_questions": [
+      "Describe brevemente el servicio o problema.",
+      "Indica si ya intentaste una solucion inmediata.",
+      "Confirma si quieres escalar a ticket si la orientacion no resuelve el caso."
+    ],
+    "requires_ticket": false
+  },
+  {
+    "id": "kb_catalogo_servicios_pendiente",
+    "kind": "fact",
+    "title": "Catalogo inicial de servicios UTB por documentar",
+    "category": "catalogo",
+    "keywords": [
+      "ayuda psicologica",
+      "prestamo de salones",
+      "ayuda estudiantil",
+      "matricula",
+      "horarios",
+      "solapamiento",
+      "servicios"
+    ],
+    "answer": "La base de conocimiento de TOOLI esta en construccion. Los servicios priorizados para documentar son: ayuda psicologica, prestamo de salones, servicios de ayuda estudiantil, errores de matricula, horarios de matricula y solapamiento de horarios. Cuando no exista una ficha completa, TOOLI debe hacer preguntas de aclaracion antes de crear un ticket.",
+    "next_questions": [
+      "Cual es el nombre oficial del servicio?",
+      "Quien puede solicitarlo?",
+      "Cual es la respuesta inmediata que TOOLI debe dar?",
+      "En que casos se debe crear ticket?"
+    ],
+    "requires_ticket": false
+  }
+]

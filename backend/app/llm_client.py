@@ -17,17 +17,23 @@ with open(SYSTEM_PROMPT_PATH, "r", encoding="utf-8") as f:
     SYSTEM_PROMPT = f.read()
 
 
-async def chat_completion(user_text: str, hint_intent: str | None = None) -> str:
+async def chat_completion(
+    user_text: str,
+    hint_intent: str | None = None,
+    conversation_history: list[dict[str, str]] | None = None,
+) -> str:
     """
-    Llama a un endpoint OpenAI-compatible (p.ej., Groq) para obtener la salida del modelo.
+    Calls an OpenAI-compatible endpoint, for example Groq, and returns model text.
     """
     headers = {"Authorization": f"Bearer {API_KEY}"}
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     if hint_intent:
         messages.append({
             "role": "user",
-            "content": f"(Pista de intención: {hint_intent})"
+            "content": f"(Pista de intencion: {hint_intent})",
         })
+    if conversation_history:
+        messages.extend(conversation_history)
     messages.append({"role": "user", "content": user_text})
 
     payload = {
