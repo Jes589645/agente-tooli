@@ -15,6 +15,9 @@ interface ApiResponse {
   session_id?: string
   request?: string
   reply?: string
+  knowledge?: {
+    id?: string
+  }
   model_raw?: string
   tool_result?: ToolResult
   error?: string
@@ -31,6 +34,7 @@ export default function DashboardPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [sessionId, setSessionId] = useState('')
+  const [lastKnowledgeId, setLastKnowledgeId] = useState('')
   const [loading, setLoading] = useState(false)
   const [apiStatus, setApiStatus] = useState('verificando...')
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -78,6 +82,7 @@ export default function DashboardPage() {
     const next = window.crypto?.randomUUID?.() || `session-${Date.now()}-${Math.random().toString(16).slice(2)}`
     window.localStorage.setItem('tooli_session_id', next)
     setSessionId(next)
+    setLastKnowledgeId('')
     setMessages([])
   }
 
@@ -104,13 +109,18 @@ export default function DashboardPage() {
       const r = await fetch('/api/tooli/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, session_id: sessionId || getOrCreateSessionId() }),
+        body: JSON.stringify({
+          message: text,
+          session_id: sessionId || getOrCreateSessionId(),
+          last_knowledge_id: lastKnowledgeId || undefined,
+        }),
       })
       const j: ApiResponse = await r.json()
       if (j.session_id) {
         window.localStorage.setItem('tooli_session_id', j.session_id)
         setSessionId(j.session_id)
       }
+      if (j.knowledge?.id) setLastKnowledgeId(j.knowledge.id)
       setMessages(prev => [...prev, { role: 'bot', text: formatReply(j) }])
     } catch {
       setMessages(prev => [...prev, { role: 'bot', text: 'Error al conectar con la API.' }])
