@@ -28,6 +28,11 @@ interface Message {
   text: string
 }
 
+interface ConversationHistoryItem {
+  role: 'user' | 'assistant'
+  content: string
+}
+
 export default function DashboardPage() {
   const router = useRouter()
   const [userEmail, setUserEmail] = useState('')
@@ -113,6 +118,9 @@ export default function DashboardPage() {
           message: text,
           session_id: sessionId || getOrCreateSessionId(),
           last_knowledge_id: lastKnowledgeId || undefined,
+          user_email: userEmail || undefined,
+          user_name: userName || undefined,
+          conversation_history: buildConversationHistory(messages),
         }),
       })
       const j: ApiResponse = await r.json()
@@ -130,6 +138,13 @@ export default function DashboardPage() {
   }
 
   const userName = userEmail.split('@')[0] || 'Operador'
+
+  const buildConversationHistory = (items: Message[]): ConversationHistoryItem[] => (
+    items.slice(-8).map(item => ({
+      role: item.role === 'user' ? 'user' : 'assistant',
+      content: item.text,
+    }))
+  )
 
   return (
     <>

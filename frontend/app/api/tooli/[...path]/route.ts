@@ -23,6 +23,9 @@ type ChatPayload = {
   message?: string
   session_id?: string
   last_knowledge_id?: string
+  user_email?: string
+  user_name?: string
+  conversation_history?: ConversationMessage[]
 }
 
 type KnowledgeMatch = {
@@ -37,11 +40,32 @@ type KnowledgeMatch = {
   item: KnowledgeItem
 }
 
+type ConversationMessage = {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+type ToolCall = {
+  name?: string
+  arguments?: Record<string, unknown>
+}
+
 const STOPWORDS = new Set([
   'algo', 'aun', 'como', 'con', 'del', 'esta', 'este', 'los', 'para', 'pero',
   'por', 'que', 'sin', 'todos', 'una', 'intente', 'pasos', 'funciona',
   'no', 'ya', 'me', 'mi', 'un', 'la', 'el', 'en', 'de', 'se', 'si', 'y',
 ])
+
+const SYSTEM_PROMPT = [
+  'Eres Asistente TOOLI-UTB.',
+  'Respondes en espanol, con tono institucional, breve y claro.',
+  'La base de conocimiento institucional es la primera fuente. Si ya no aplica, conversa normalmente dentro del alcance de TOOLI.',
+  'Puedes usar el contexto de sesion enviado por el frontend.',
+  'Si el usuario pregunta por su nombre, usa el perfil de usuario disponible y no inventes datos.',
+  'La creacion de tickets es el ultimo recurso.',
+  'Nunca digas que un ticket fue creado, registrado o radicado si no hay resultado real de GLPI.',
+  'Si necesitas una accion, responde exclusivamente con JSON: {"tool_call":{"name":"funcionCrearTicket","arguments":{"titulo":"...","descripcion":"..."}}}.',
+].join('\n')
 
 export async function GET(_request: NextRequest, context: { params: { path?: string[] } }) {
   const path = context.params.path || []
@@ -111,12 +135,136 @@ export async function POST(request: NextRequest, context: { params: { path?: str
     })
   }
 
-  return NextResponse.json({
-    mode: 'text',
-    session_id: sessionId,
-    request: userText,
-    reply: 'Bienvenido a la asistencia de TOOLI de la Universidad Tecnologica de Bolivar. Describe el servicio o problema y te orientare con la base de conocimiento disponible.',
+  try {
+    const modelText = await chatCompletion(userText, payload)
+    const toolCall = parseToolCall(modelText)
+
+    if (toolCall) {
+      if (toolCall.name === 'funcionCrearTicket' && !hasEscalationConfirmation(userText)) {
+        return NextResponse.json({
+          mode: 'needs_resolution_first',
+          session_id: sessionId,
+          request: userText,
+          model_raw: modelText,
+          reply: 'Antes de crear un ticket, intentemos resolverlo con la base de conocimiento de TOOLI. Si despues de la orientacion no queda resuelto, dime: abre un ticket.',
+        })
+      }
+
+      if (toolCall.name === 'funcionCrearTicket') {
+        const ticketResult = await createTicket(normalizeTicketArgs(toolCall.arguments || {}, userText))
+        return NextResponse.json({
+          mode: 'tool_call(json)',
+          session_id: sessionId,
+          request: userText,
+          model_raw: modelText,
+          tool_result: ticketResult,
+        })
+      }
+
+      return NextResponse.json({
+        mode: 'error',
+        session_id: sessionId,
+        request: userText,
+        error: `Funcion no soportada: ${toolCall.name || 'sin nombre'}`,
+      })
+    }
+
+    return NextResponse.json({
+      mode: 'text',
+      session_id: sessionId,
+      request: userText,
+      reply: claimsTicketCreated(modelText)
+        ? 'No puedo confirmar la creacion de un ticket porque GLPI no devolvio un ID. Si ya intentaste la solucion y quieres escalar el caso, dime: abre un ticket.'
+        : modelText,
+    })
+  } catch (error) {
+    return NextResponse.json({
+      mode: 'error',
+      session_id: sessionId,
+      request: userText,
+      error: `No se pudo consultar el modelo. Verifica LLM_API_KEY, LLM_BASE_URL y LLM_MODEL en Vercel. Detalle: ${String(error)}`,
+    }, { status: 500 })
+  }
+}
+
+async function chatCompletion(userText: string, payload: ChatPayload): Promise<string> {
+  const apiKey = process.env.LLM_API_KEY
+  const baseUrl = process.env.LLM_BASE_URL || 'https://api.groq.com/openai/v1'
+  const model = process.env.LLM_MODEL || 'llama-3.1-8b-instant'
+
+  if (!apiKey) {
+    throw new Error('LLM_API_KEY no configurada')
+  }
+
+  const messages = [
+    { role: 'system', content: SYSTEM_PROMPT },
+    {
+      role: 'system',
+      content: [
+        payload.user_name ? `Nombre visible del usuario: ${payload.user_name}` : '',
+        payload.user_email ? `Correo institucional: ${payload.user_email}` : '',
+      ].filter(Boolean).join('\n') || 'No hay perfil de usuario disponible.',
+    },
+    ...sanitizeHistory(payload.conversation_history || []),
+    { role: 'user', content: userText },
+  ]
+
+  const response = await fetch(`${baseUrl.replace(/\/$/, '')}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      messages,
+      temperature: Number(process.env.TEMPERATURE || '0.2'),
+      top_p: Number(process.env.TOP_P || '0.9'),
+      max_tokens: Number(process.env.MAX_TOKENS || '512'),
+    }),
   })
+
+  if (!response.ok) {
+    throw new Error(`LLM respondio ${response.status}`)
+  }
+
+  const data = await response.json()
+  const content = data?.choices?.[0]?.message?.content
+  if (!content || typeof content !== 'string') {
+    throw new Error('LLM respondio sin contenido')
+  }
+  return content
+}
+
+function sanitizeHistory(history: ConversationMessage[]): ConversationMessage[] {
+  return history
+    .filter(item => (item.role === 'user' || item.role === 'assistant') && item.content?.trim())
+    .slice(-8)
+    .map(item => ({
+      role: item.role,
+      content: item.content.slice(0, 1200),
+    }))
+}
+
+function parseToolCall(modelText: string): ToolCall | null {
+  try {
+    const parsed = JSON.parse(modelText)
+    const toolCall = parsed?.tool_call
+    if (toolCall && typeof toolCall === 'object') return toolCall
+  } catch {
+    return null
+  }
+  return null
+}
+
+function normalizeTicketArgs(args: Record<string, unknown>, userText: string) {
+  const titulo = typeof args.titulo === 'string' && args.titulo.trim()
+    ? args.titulo.trim()
+    : `Solicitud TOOLI - ${userText.slice(0, 80)}`
+  const descripcion = typeof args.descripcion === 'string' && args.descripcion.trim()
+    ? args.descripcion.trim()
+    : userText
+  return { titulo, descripcion }
 }
 
 function searchKnowledge(userText: string): KnowledgeMatch | null {
@@ -325,4 +473,17 @@ function hasResolutionAttempt(userText: string): boolean {
     'no pude resolver',
     'me sigue saliendo',
   ].some(phrase => text.includes(phrase))
+}
+
+function claimsTicketCreated(text: string): boolean {
+  const normalized = normalize(text)
+  return normalized.includes('ticket') && [
+    'ticket creado',
+    'se creo el ticket',
+    'se ha creado',
+    'ticket registrado',
+    'se registro el ticket',
+    'ticket radicado',
+    'se radico',
+  ].some(phrase => normalized.includes(phrase))
 }
