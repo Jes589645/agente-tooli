@@ -6,6 +6,9 @@
     "dev": "cd frontend && npm run dev",
     "start": "cd frontend && npm run start"
   },
+  "engines": {
+    "node": "20.x"
+  },
   "dependencies": {
     "next": "14.2.5"
   }
