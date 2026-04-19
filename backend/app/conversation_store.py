@@ -53,3 +53,7 @@ def get_recent_messages(session_id: str, limit: int = 8) -> list[dict[str, str]]
         for item in recent
         if item.get("role") in ("user", "assistant") and item.get("content")
     ]
+
+
+def get_recent_entries(session_id: str, limit: int = 8) -> list[dict[str, Any]]:
+    return _sessions.get(session_id, [])[-limit:]

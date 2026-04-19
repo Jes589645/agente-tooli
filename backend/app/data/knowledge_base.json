@@ -1,46 +1,2854 @@
 [
   {
-    "id": "kb_ticket_policy",
-    "kind": "fact",
-    "title": "Politica de escalamiento a tickets",
-    "category": "tooli",
+    "id": "kb_wifi_001",
+    "kind": "faq",
+    "title": "No puedo conectarme a la red Wi-Fi ConectaUTB",
+    "category": "conectividad",
+    "service": "Red Conecta UTB",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
     "keywords": [
-      "ticket",
-      "crear ticket",
-      "generar ticket",
-      "incidencia",
-      "escalar",
-      "glpi"
+      "wifi",
+      "red",
+      "internet",
+      "ConectaUTB",
+      "conexion",
+      "no conecta",
+      "inalambrico",
+      "sin internet"
     ],
-    "answer": "TOOLI debe intentar orientar al usuario con la base de conocimiento antes de crear un ticket. El ticket se reserva para casos donde la informacion disponible no resuelve el caso, se requiere revision humana, hay datos personales o academicos que validar, o el usuario confirma que desea escalar despues de recibir la orientacion inicial.",
-    "next_questions": [
-      "Describe brevemente el servicio o problema.",
-      "Indica si ya intentaste una solucion inmediata.",
-      "Confirma si quieres escalar a ticket si la orientacion no resuelve el caso."
+    "user_problem_examples": [
+      "No puedo conectarme al wifi de la universidad",
+      "La red ConectaUTB no me aparece",
+      "Mi dispositivo no se conecta a la red institucional",
+      "El wifi del campus no funciona"
     ],
-    "requires_ticket": false
+    "answer": "El servicio Red Conecta UTB proporciona acceso Wi-Fi institucional dentro del campus. Si no puedes conectarte, primero verifica que estás dentro del campus, que el Wi-Fi de tu dispositivo esté activado y que estés seleccionando la red correcta (ConectaUTB). Si el problema persiste después de intentar los pasos básicos, debes radicar una solicitud de soporte.",
+    "self_service_steps": [
+      "Verifica que el Wi-Fi de tu dispositivo esté activado.",
+      "Busca la red 'ConectaUTB' en la lista de redes disponibles.",
+      "Ingresa tus credenciales institucionales (usuario y contraseña del correo UTB).",
+      "Si el dispositivo pide aceptar un certificado, acéptalo.",
+      "Intenta olvidar la red y reconectarte desde cero.",
+      "Reinicia tu dispositivo y vuelve a intentarlo."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Tipo y modelo de dispositivo",
+      "Sistema operativo",
+      "Ubicación dentro del campus donde presenta el problema",
+      "Captura de pantalla del error si aplica"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario intentó los pasos de autoservicio y sigue sin conexión.",
+        "El problema afecta a múltiples dispositivos o usuarios en la misma zona.",
+        "Se requiere configuración especial para un evento institucional."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario aún no ha intentado los pasos básicos de conexión.",
+        "El problema es que el usuario no conoce sus credenciales (se redirige a recuperación de contraseña).",
+        "El usuario está fuera del campus."
+      ]
+    },
+    "escalation": {
+      "target_area": "Infraestructura de Red - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Fallo de conexión Wi-Fi ConectaUTB - [Nombre usuario] - [Ubicación]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] reporta que no puede conectarse a la red ConectaUTB desde [tipo de dispositivo] en [ubicación del campus]. Ya intentó los pasos básicos sin éxito. Sistema operativo: [SO]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
   },
   {
-    "id": "kb_catalogo_servicios_pendiente",
-    "kind": "fact",
-    "title": "Catalogo inicial de servicios UTB por documentar",
-    "category": "catalogo",
+    "id": "kb_wifi_002",
+    "kind": "faq",
+    "title": "Solicitud de conectividad Wi-Fi para evento institucional",
+    "category": "conectividad",
+    "service": "Red Conecta UTB",
+    "audience": [
+      "docentes",
+      "administrativos"
+    ],
     "keywords": [
-      "ayuda psicologica",
-      "prestamo de salones",
-      "ayuda estudiantil",
+      "wifi evento",
+      "red evento",
+      "internet auditorio",
+      "conectividad actividad",
+      "acceso especial red",
+      "solicitud red evento"
+    ],
+    "user_problem_examples": [
+      "Necesito internet para un evento en el auditorio",
+      "Voy a hacer una actividad y necesito conexión especial",
+      "Cómo solicito red para un evento institucional"
+    ],
+    "answer": "Para eventos institucionales o actividades que requieran acceso especial a la red Wi-Fi, debes radicar una solicitud con anticipación a través de TOOLI. El acceso para invitados externos se gestiona directamente mediante el flujo de aprobación definido por los funcionarios autorizados y no requiere solicitud adicional desde el formulario de incidencias.",
+    "self_service_steps": [
+      "Ingresa a TOOLI y selecciona el servicio 'Red Conecta UTB'.",
+      "Escoge la opción 'Solicitudes de conectividad para eventos institucionales'.",
+      "Describe el evento: fecha, lugar, número de asistentes y requerimientos de red.",
+      "Envía la solicitud con al menos 48 horas de anticipación."
+    ],
+    "required_data": [
+      "Nombre del solicitante",
+      "Correo institucional",
+      "Nombre y descripción del evento",
+      "Fecha y hora del evento",
+      "Lugar dentro del campus",
+      "Número aproximado de asistentes",
+      "Requerimientos técnicos especiales"
+    ],
+    "ticket_policy": {
+      "requires_ticket": true,
+      "create_ticket_when": [
+        "Siempre que se requiera conectividad especial para un evento.",
+        "Cuando se necesite acceso para invitados externos."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario solo necesita conectarse con sus credenciales normales al Wi-Fi institucional."
+      ]
+    },
+    "escalation": {
+      "target_area": "Infraestructura de Red - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Solicitud de red para evento - [Nombre evento] - [Fecha]",
+      "ticket_description_template": "El usuario [nombre] solicita conectividad especial para el evento '[nombre evento]' que se realizará el [fecha] en [lugar] con aproximadamente [N] asistentes."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_onedrive_001",
+    "kind": "faq",
+    "title": "No puedo acceder o sincronizar mi OneDrive institucional",
+    "category": "almacenamiento",
+    "service": "Almacenamiento y Respaldo de Archivos en la Nube",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "OneDrive",
+      "nube",
+      "archivos",
+      "almacenamiento",
+      "Office 365",
+      "no puedo acceder",
+      "sincronizacion",
+      "respaldo"
+    ],
+    "user_problem_examples": [
+      "No puedo entrar a mi OneDrive",
+      "Mis archivos no se sincronizan",
+      "No me deja subir archivos a la nube institucional",
+      "OneDrive no sincroniza mis carpetas"
+    ],
+    "answer": "El servicio de Almacenamiento y Respaldo está respaldado por OneDrive de Office 365. Puedes acceder desde office.com con tu correo institucional o desde la aplicación de escritorio. Si tienes problemas de sincronización o acceso, generalmente es porque las credenciales no están activas o la sesión expiró.",
+    "self_service_steps": [
+      "Ingresa a office.com desde tu navegador.",
+      "Inicia sesión con tu correo institucional (@utb.edu.co) y contraseña.",
+      "Haz clic en el ícono de OneDrive en el menú de aplicaciones.",
+      "Si usas la app de escritorio, cierra sesión y vuelve a iniciarla con tus credenciales institucionales.",
+      "Para problemas de sincronización, haz clic derecho en el ícono de OneDrive en la barra de tareas y selecciona 'Pausar sincronización' y luego 'Reanudar'.",
+      "Si olvidaste tu contraseña, recupérala desde el portal de cuentas de Microsoft."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Descripción del problema",
+      "Captura de pantalla del error"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El acceso no se restaura después de recuperar credenciales.",
+        "El usuario reporta pérdida de archivos.",
+        "La sincronización falla persistentemente después de intentar los pasos básicos."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario solo olvidó su contraseña y puede recuperarla.",
+        "El usuario no conoce la URL de acceso."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Fallo acceso/sincronización OneDrive - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] no puede acceder o sincronizar su OneDrive institucional. Problema: [descripción]. Ya intentó los pasos básicos sin éxito."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_onedrive_002",
+    "kind": "faq",
+    "title": "Solicitar instrucciones sobre funcionalidades de OneDrive institucional",
+    "category": "almacenamiento",
+    "service": "Almacenamiento y Respaldo de Archivos en la Nube",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "como usar OneDrive",
+      "compartir archivos",
+      "funcionalidad OneDrive",
+      "instrucciones nube",
+      "orientacion OneDrive"
+    ],
+    "user_problem_examples": [
+      "Cómo comparto archivos desde OneDrive",
+      "No sé cómo usar OneDrive institucional",
+      "Cómo accedo a mis archivos desde otro dispositivo"
+    ],
+    "answer": "OneDrive institucional de la UTB te permite guardar, compartir y acceder a tus archivos desde cualquier dispositivo. Está integrado con Office 365 y puedes usarlo desde office.com o desde la app de escritorio.",
+    "self_service_steps": [
+      "Ingresa a office.com con tu correo @utb.edu.co.",
+      "Selecciona OneDrive en el menú de aplicaciones.",
+      "Para subir archivos: haz clic en 'Cargar' y selecciona el archivo desde tu equipo.",
+      "Para compartir: selecciona el archivo, haz clic en 'Compartir' e ingresa el correo del destinatario.",
+      "Para acceder desde otro dispositivo: instala la app de OneDrive e inicia sesión con tu cuenta institucional.",
+      "Si necesitas orientación adicional, radica la solicitud en TOOLI → Almacenamiento → 'Solicitar instrucción sobre funcionalidad de OneDrive'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Descripción de la funcionalidad sobre la que necesita orientación"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario necesita orientación personalizada más allá de los pasos básicos.",
+        "Se requiere configuración especial para el área o dependencia."
+      ],
+      "do_not_create_ticket_when": [
+        "La consulta es resuelta con los pasos de autoservicio."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "baja",
+      "ticket_title_template": "Solicitud orientación OneDrive - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] solicita orientación sobre el uso de OneDrive institucional. Tema: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_seguridad_001",
+    "kind": "faq",
+    "title": "Recibí un correo sospechoso o malicioso",
+    "category": "seguridad_informatica",
+    "service": "Análisis de Amenazas Informáticas",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "correo malicioso",
+      "phishing",
+      "spam",
+      "correo sospechoso",
+      "fraude",
+      "estafa email",
+      "amenaza informatica"
+    ],
+    "user_problem_examples": [
+      "Recibí un correo raro que me pide mis datos",
+      "Creo que me llegó un correo de phishing",
+      "Me llegó un mensaje sospechoso al correo institucional",
+      "Un correo me pide que haga clic en un enlace extraño"
+    ],
+    "answer": "Si recibiste un correo de origen desconocido o con características sospechosas (enlaces extraños, solicitud de datos personales, remitente desconocido), NO hagas clic en ningún enlace ni descargues archivos adjuntos. Debes reportarlo de inmediato al área de seguridad informática a través de TOOLI seleccionando 'Solicitar verificación de correo electrónico sospechoso'.",
+    "self_service_steps": [
+      "NO hagas clic en ningún enlace del correo sospechoso.",
+      "NO descargues ningún archivo adjunto.",
+      "NO respondas el correo ni proporciones datos personales.",
+      "Marca el correo como 'Phishing' o 'Correo no deseado' en Outlook.",
+      "Toma una captura de pantalla del correo mostrando el remitente y el contenido.",
+      "Radica la solicitud en TOOLI → Análisis de Amenazas Informáticas → 'Solicitar verificación de correo electrónico sospechoso'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Remitente del correo sospechoso",
+      "Asunto del correo",
+      "Captura de pantalla del correo completo",
+      "Descripción de lo que ocurrió si se hizo clic en algún enlace"
+    ],
+    "ticket_policy": {
+      "requires_ticket": true,
+      "create_ticket_when": [
+        "Siempre que se reciba un correo sospechoso o malicioso.",
+        "Si el usuario hizo clic en algún enlace o descargó algún archivo del correo.",
+        "Si el usuario proporcionó datos personales en respuesta al correo."
+      ],
+      "do_not_create_ticket_when": [
+        "El correo fue identificado como spam ordinario sin características maliciosas y fue eliminado sin interacción."
+      ]
+    },
+    "escalation": {
+      "target_area": "Seguridad Informática - Dirección de TI UTB",
+      "priority": "alta",
+      "ticket_title_template": "Reporte correo malicioso - [Nombre usuario] - [Fecha]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] reporta haber recibido un correo sospechoso de [remitente] con asunto '[asunto]'. [Descripción de interacción]. Adjunta captura de pantalla."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_seguridad_002",
+    "kind": "faq",
+    "title": "Creo que mi cuenta institucional fue comprometida",
+    "category": "seguridad_informatica",
+    "service": "Análisis de Amenazas Informáticas",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "cuenta hackeada",
+      "acceso no autorizado",
+      "contraseña robada",
+      "cuenta comprometida",
+      "inicio de sesion sospechoso"
+    ],
+    "user_problem_examples": [
+      "Creo que alguien entró a mi cuenta",
+      "Mi contraseña fue cambiada sin que yo lo hiciera",
+      "Recibo notificaciones de inicio de sesión que no soy yo",
+      "Me bloquearon mi cuenta institucional"
+    ],
+    "answer": "Si sospechas que tu cuenta fue comprometida, actúa de inmediato. Cambia tu contraseña lo antes posible y reporta el incidente a través de TOOLI seleccionando 'Solicitar verificación de Inicio de sesión sospechoso'.",
+    "self_service_steps": [
+      "Cambia tu contraseña inmediatamente desde account.microsoft.com.",
+      "Activa la verificación en dos pasos si no la tienes activa.",
+      "Cierra todas las sesiones activas desde la configuración de seguridad de tu cuenta.",
+      "Revisa los dispositivos conectados y elimina los que no reconoces.",
+      "Radica la solicitud en TOOLI → Análisis de Amenazas → 'Solicitar verificación de Inicio de sesión sospechoso'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Descripción de lo que ocurrió",
+      "Fecha aproximada en que detectó el problema",
+      "Capturas de pantalla de actividad sospechosa"
+    ],
+    "ticket_policy": {
+      "requires_ticket": true,
+      "create_ticket_when": [
+        "Siempre que se reporte acceso no autorizado a una cuenta institucional.",
+        "Si el usuario no puede recuperar el acceso a su cuenta."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario solo olvidó su contraseña sin indicios de acceso externo."
+      ]
+    },
+    "escalation": {
+      "target_area": "Seguridad Informática - Dirección de TI UTB",
+      "priority": "alta",
+      "ticket_title_template": "Cuenta comprometida - [Nombre usuario] - Urgente",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] reporta posible acceso no autorizado el [fecha]. Descripción: [descripción]. Se requiere revisión urgente de logs de acceso."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_repositorio_001",
+    "kind": "faq",
+    "title": "No puedo acceder al Repositorio Institucional UTB",
+    "category": "repositorio",
+    "service": "Autoservicio Repositorio Institucional",
+    "audience": [
+      "estudiantes",
+      "docentes"
+    ],
+    "keywords": [
+      "repositorio",
+      "publicar trabajo",
+      "acceso abierto",
+      "tesis",
+      "publicacion institucional",
+      "acceso repositorio"
+    ],
+    "user_problem_examples": [
+      "No puedo entrar al repositorio institucional",
+      "El portal del repositorio me da error",
+      "Quiero publicar mi trabajo de grado en el repositorio"
+    ],
+    "answer": "El Repositorio Institucional es el espacio de acceso abierto donde se publican trabajos de grado, artículos e investigaciones. Si presentas inconvenientes de acceso al portal, puedes reportarlo en TOOLI seleccionando 'Presento inconvenientes de acceso al repositorio'.",
+    "self_service_steps": [
+      "Ingresa al repositorio institucional de la UTB desde el portal web oficial.",
+      "Si deseas consultar publicaciones, puedes buscarlas libremente sin cuenta.",
+      "Para publicar tu trabajo, coordina con tu director de tesis y la Biblioteca.",
+      "Si tienes problemas técnicos, radica en TOOLI → Autoservicio Repositorio Institucional."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Programa académico",
+      "Descripción del problema",
+      "Captura de pantalla del error"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario no puede acceder al sistema después de intentar los pasos básicos.",
+        "El portal presenta errores técnicos persistentes."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario solo quiere consultar publicaciones (acceso libre).",
+        "El usuario necesita información general sobre el repositorio."
+      ]
+    },
+    "escalation": {
+      "target_area": "Biblioteca - Repositorio Institucional UTB",
+      "priority": "normal",
+      "ticket_title_template": "Soporte Repositorio Institucional - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] del programa [programa] tiene problemas con el repositorio. Motivo: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_correo_001",
+    "kind": "faq",
+    "title": "No puedo acceder a mi correo institucional",
+    "category": "correo",
+    "service": "Correo Electrónico",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "correo",
+      "email",
+      "outlook",
+      "no puedo entrar correo",
+      "contraseña correo",
+      "correo institucional"
+    ],
+    "user_problem_examples": [
+      "No puedo entrar a mi correo institucional",
+      "Olvidé la contraseña de mi correo UTB",
+      "Mi correo @utb.edu.co no funciona",
+      "No me deja iniciar sesión en Outlook"
+    ],
+    "answer": "El correo institucional de la UTB está basado en Microsoft Office 365 con Outlook y tiene 100GB de almacenamiento. Accede desde outlook.office.com. Si no puedes ingresar, lo más común es que la contraseña haya expirado.",
+    "self_service_steps": [
+      "Ingresa a outlook.office.com desde tu navegador.",
+      "Escribe tu correo institucional (usuario@utb.edu.co) y contraseña.",
+      "Si olvidaste tu contraseña, haz clic en '¿Olvidaste tu contraseña?' y sigue el proceso de recuperación.",
+      "Si el sistema pide verificación adicional, usa el método de verificación configurado.",
+      "Si no puedes recuperar la contraseña, radica un ticket en TOOLI → Correo Electrónico."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Código estudiantil o número de documento",
+      "Descripción del error"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario no puede recuperar su contraseña por los medios automáticos.",
+        "La cuenta fue bloqueada o desactivada.",
+        "El correo presenta errores técnicos persistentes."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario puede recuperar su contraseña de forma autónoma.",
+        "El usuario solo necesita saber la URL de acceso."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Sin acceso correo institucional - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] y código [código] no puede acceder a su correo. Error: [descripción]. No logró recuperar acceso por los métodos automáticos."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_correo_002",
+    "kind": "faq",
+    "title": "Problemas al enviar o recibir correos institucionales",
+    "category": "correo",
+    "service": "Correo Electrónico",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "no recibo correos",
+      "no puedo enviar correo",
+      "correos no llegan",
+      "buzon lleno",
+      "cuota correo"
+    ],
+    "user_problem_examples": [
+      "No me llegan correos",
+      "No puedo enviar correos desde mi cuenta institucional",
+      "Mi buzón dice que está lleno",
+      "Me da error al intentar enviar un mensaje"
+    ],
+    "answer": "El correo institucional tiene 100GB de almacenamiento. Si tu buzón está lleno, los correos nuevos no llegarán. Si no puedes enviar, puede ser por restricciones de la cuenta o un problema técnico.",
+    "self_service_steps": [
+      "Revisa la carpeta de Spam o Correo no deseado.",
+      "Verifica el uso de tu buzón en Configuración > General > Almacenamiento.",
+      "Elimina correos innecesarios de las carpetas Enviados y Eliminados.",
+      "Vacía la carpeta de elementos eliminados.",
+      "Si el problema persiste, radica en TOOLI → Correo Electrónico → 'Presento inconvenientes al enviar/recibir correos'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Descripción del problema",
+      "Remitente o destinatario relacionado"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El buzón tiene espacio pero los correos no llegan.",
+        "Hay error técnico en el servicio de correo.",
+        "El problema persiste después de liberar espacio."
+      ],
+      "do_not_create_ticket_when": [
+        "El buzón está lleno y el usuario puede liberar espacio por su cuenta.",
+        "El correo estaba en la carpeta de spam."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Problema envío/recepción correos - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] reporta problemas para [enviar/recibir] correos. El problema persiste después de revisar spam y liberar espacio."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_correo_003",
+    "kind": "faq",
+    "title": "Cómo añadir firma a mi correo institucional",
+    "category": "correo",
+    "service": "Correo Electrónico",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "firma correo",
+      "signature outlook",
+      "añadir firma",
+      "firma institucional",
+      "configurar firma email"
+    ],
+    "user_problem_examples": [
+      "Cómo agrego una firma a mi correo institucional",
+      "Quiero poner mi firma automática en Outlook",
+      "Cómo configuro la firma en mi correo UTB"
+    ],
+    "answer": "Puedes configurar tu firma en Outlook desde la configuración de la cuenta. La firma aparecerá automáticamente en los correos nuevos o al responder según la configuración que elijas.",
+    "self_service_steps": [
+      "En Outlook web: ve a Configuración (engranaje) > Ver toda la configuración > Correo > Redactar y responder > Firma.",
+      "En Outlook escritorio: ve a Archivo > Opciones > Correo > Firmas.",
+      "Crea tu firma con nombre, cargo, correo y teléfono.",
+      "Selecciona en qué casos se usará: correos nuevos, respuestas o ambos.",
+      "Si tienes dificultades técnicas, radica en TOOLI → Correo Electrónico → 'Solicitar indicaciones para añadir firma a mi correo'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Descripción de la dificultad"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario sigue los pasos pero la firma no se guarda o no aparece.",
+        "Hay error técnico al configurar la firma."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario no ha intentado configurar la firma siguiendo los pasos indicados."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "baja",
+      "ticket_title_template": "Soporte configuración firma correo - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] necesita soporte para configurar su firma en Outlook. Ya intentó los pasos básicos sin éxito."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_correo_004",
+    "kind": "faq",
+    "title": "Cómo configurar el correo institucional en un dispositivo móvil",
+    "category": "correo",
+    "service": "Correo Electrónico",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "correo celular",
+      "outlook movil",
+      "configurar correo movil",
+      "correo android",
+      "correo iphone"
+    ],
+    "user_problem_examples": [
+      "Cómo configuro el correo UTB en mi celular",
+      "Quiero recibir mis correos institucionales en el teléfono",
+      "Cómo sincronizo mi correo @utb.edu.co en el celular"
+    ],
+    "answer": "Puedes acceder a tu correo institucional desde cualquier dispositivo móvil descargando Microsoft Outlook. El acceso se hace con tu correo @utb.edu.co y contraseña institucional.",
+    "self_service_steps": [
+      "Descarga la app 'Microsoft Outlook' desde App Store o Google Play.",
+      "Abre la app y selecciona 'Agregar cuenta'.",
+      "Ingresa tu correo institucional (usuario@utb.edu.co) y continúa.",
+      "Selecciona 'Cuenta laboral o educativa'.",
+      "Ingresa tu contraseña institucional y acepta los permisos.",
+      "Si el proceso falla, radica en TOOLI → Correo Electrónico → 'Solicitar indicaciones para configurar correo electrónico en dispositivo'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Tipo de dispositivo (marca y modelo)",
+      "Sistema operativo y versión",
+      "Descripción del error si aplica"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "La configuración falla con error técnico después de seguir los pasos.",
+        "El dispositivo no acepta la autenticación institucional."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario no ha intentado instalar la app de Outlook.",
+        "El usuario solo necesita saber qué app descargar."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "baja",
+      "ticket_title_template": "Configuración correo en dispositivo móvil - [Nombre usuario] - [Dispositivo]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] no puede configurar su correo en [dispositivo] con [SO]. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_salasvirtuales_001",
+    "kind": "faq",
+    "title": "No puedo acceder a Mi Sala Virtual UTB",
+    "category": "salas_virtuales",
+    "service": "Mi Sala Virtual UTB",
+    "audience": [
+      "estudiantes",
+      "docentes"
+    ],
+    "keywords": [
+      "sala virtual",
+      "computador virtual",
+      "software licenciado",
+      "acceso sala virtual",
+      "laboratorio virtual"
+    ],
+    "user_problem_examples": [
+      "No puedo entrar a la sala virtual",
+      "La sala virtual no carga",
+      "El escritorio virtual no abre"
+    ],
+    "answer": "Mi Sala Virtual UTB brinda acceso a espacios virtuales con software licenciado. Soporte disponible L-V 7:00AM-9:00PM y sáb 7:00AM-12:00PM. Tiempo de respuesta: 3 horas.",
+    "self_service_steps": [
+      "Verifica que tienes conexión a internet estable.",
+      "Intenta acceder al portal con tus credenciales institucionales.",
+      "Prueba desde un navegador diferente (Chrome, Firefox, Edge).",
+      "Borra el caché y cookies del navegador.",
+      "Si el problema persiste, radica en TOOLI → Mi Sala Virtual UTB → 'Presento inconvenientes con acceso a mi sala virtual'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Tipo de dispositivo y sistema operativo",
+      "Navegador utilizado",
+      "Descripción del error",
+      "Captura de pantalla"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario no puede acceder después de intentar los pasos básicos.",
+        "El software dentro de la sala virtual presenta errores."
+      ],
+      "do_not_create_ticket_when": [
+        "El problema se resuelve limpiando caché o cambiando de navegador.",
+        "El usuario no ha intentado los pasos básicos."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Mi Sala Virtual - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Sin acceso Sala Virtual - [Nombre usuario] - [Fecha]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] no puede acceder a Mi Sala Virtual. Dispositivo: [tipo]. Navegador: [navegador]. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_salasvirtuales_002",
+    "kind": "faq",
+    "title": "Software dentro de la Sala Virtual no funciona correctamente",
+    "category": "salas_virtuales",
+    "service": "Mi Sala Virtual UTB",
+    "audience": [
+      "estudiantes",
+      "docentes"
+    ],
+    "keywords": [
+      "software sala virtual",
+      "programa no abre",
+      "error software licenciado",
+      "matlab sala virtual",
+      "autocad virtual"
+    ],
+    "user_problem_examples": [
+      "El programa que necesito en la sala virtual no abre",
+      "El software de la sala virtual se cierra solo",
+      "La aplicación dentro de la sala virtual da error"
+    ],
+    "answer": "Mi Sala Virtual UTB ofrece software licenciado para uso institucional. Si un programa no funciona, puede ser por sesión colgada, problema de permisos o fallo temporal. Soporte L-V 7am-9pm, sáb 7am-12pm, tiempo de respuesta 3 horas.",
+    "self_service_steps": [
+      "Cierra la sesión de la sala virtual y vuelve a ingresar.",
+      "Verifica que el software está en la lista de aplicaciones disponibles.",
+      "Intenta abrir el software desde el escritorio virtual directamente.",
+      "Si se cierra inesperadamente, espera 5 minutos y vuelve a intentarlo.",
+      "Radica en TOOLI → Mi Sala Virtual UTB → 'Presento inconvenientes con software instalado en mi sala virtual'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Nombre del software que falla",
+      "Descripción del error",
+      "Captura de pantalla"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El software falla persistentemente después de reiniciar sesión.",
+        "El software no aparece en la lista de aplicaciones disponibles."
+      ],
+      "do_not_create_ticket_when": [
+        "El problema se resuelve cerrando y volviendo a abrir sesión.",
+        "El usuario no ha reiniciado la sesión aún."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Mi Sala Virtual - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Fallo software en Sala Virtual - [Software] - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] reporta que '[nombre software]' no funciona en Mi Sala Virtual. Error: [descripción]. Ya reinició la sesión sin éxito."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_ofimatica_001",
+    "kind": "faq",
+    "title": "No puedo acceder a Microsoft Teams institucional",
+    "category": "ofimatica",
+    "service": "Ofimática Colaborativa",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "teams",
+      "microsoft teams",
+      "no puedo entrar teams",
+      "teams utb",
+      "videollamada teams"
+    ],
+    "user_problem_examples": [
+      "No puedo entrar a Teams",
+      "Teams no me deja iniciar sesión con mi correo UTB",
+      "No tengo acceso a Microsoft Teams"
+    ],
+    "answer": "Microsoft Teams es parte del paquete de Ofimática Colaborativa de Office 365. Accede desde teams.microsoft.com usando tu correo @utb.edu.co. Verifica siempre que uses tu cuenta institucional y no una personal.",
+    "self_service_steps": [
+      "Ingresa a teams.microsoft.com desde tu navegador.",
+      "Haz clic en 'Iniciar sesión' e ingresa tu correo institucional (usuario@utb.edu.co).",
+      "Selecciona 'Cuenta laboral o educativa', no cuenta personal.",
+      "Si ya tienes Teams instalado, cierra sesión de cualquier cuenta personal y vuelve a iniciar con tu correo UTB.",
+      "Si el problema persiste, radica en TOOLI → Ofimática Colaborativa → Incidencia."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Tipo de dispositivo",
+      "Descripción del error",
+      "Captura de pantalla"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario no puede acceder después de intentar con el navegador web.",
+        "La licencia de Office 365 no está asignada."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario estaba usando una cuenta personal.",
+        "El problema se resuelve cerrando sesión y volviendo a ingresar con la cuenta correcta."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Sin acceso Microsoft Teams - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] no puede acceder a Teams con su cuenta institucional. Error: [descripción]. Ya intentó desde navegador web."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_ofimatica_002",
+    "kind": "faq",
+    "title": "No puedo instalar o activar las aplicaciones de Office 365",
+    "category": "ofimatica",
+    "service": "Ofimática Colaborativa",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "office 365",
+      "word",
+      "excel",
+      "powerpoint",
+      "instalar office",
+      "licencia office",
+      "activar office"
+    ],
+    "user_problem_examples": [
+      "Cómo instalo Office con mi cuenta UTB",
+      "Mi Office dice que la licencia expiró",
+      "No tengo Word instalado, cómo lo consigo"
+    ],
+    "answer": "Con tu cuenta @utb.edu.co tienes acceso a Office 365: Word, Excel, PowerPoint, Teams, SharePoint y más. Puedes usarlos en línea desde office.com o instalar las apps en hasta 5 dispositivos.",
+    "self_service_steps": [
+      "Ingresa a office.com con tu correo institucional.",
+      "Haz clic en 'Instalar aplicaciones' en la esquina superior derecha.",
+      "Descarga e instala el paquete de Office 365.",
+      "Al abrir cualquier aplicación, inicia sesión con tu correo @utb.edu.co.",
+      "Si prefieres usar las apps en línea, selecciona la aplicación directamente desde office.com."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Tipo de dispositivo y sistema operativo",
+      "Descripción del problema"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "La cuenta no tiene licencia de Office 365 asignada.",
+        "La instalación falla con error técnico.",
+        "La activación falla persistentemente."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario no ha intentado el proceso de instalación por su cuenta."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Problema licencia Office 365 - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] presenta problemas para acceder o instalar Office 365. SO: [SO]. Descripción: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_savio_001",
+    "kind": "faq",
+    "title": "No puedo acceder a la Plataforma SAVIO",
+    "category": "plataforma_virtual",
+    "service": "Plataforma SAVIO",
+    "audience": [
+      "estudiantes",
+      "docentes"
+    ],
+    "keywords": [
+      "SAVIO",
+      "plataforma virtual",
+      "LMS",
+      "aula virtual",
+      "no puedo entrar SAVIO"
+    ],
+    "user_problem_examples": [
+      "No puedo entrar a SAVIO",
+      "La plataforma virtual no me deja iniciar sesión",
+      "No tengo acceso a mis cursos en SAVIO"
+    ],
+    "answer": "SAVIO es el Sistema de Aprendizaje Virtual Interactivo de la UTB. El acceso se realiza con tus credenciales institucionales. Si no puedes ingresar, verifica que tu cuenta esté activa.",
+    "self_service_steps": [
+      "Ingresa a la URL de SAVIO de la UTB desde tu navegador.",
+      "Haz clic en 'Iniciar sesión' e ingresa tu usuario y contraseña institucional.",
+      "Si olvidaste tu contraseña, usa la opción de recuperación.",
+      "Prueba limpiando el caché o usando un navegador diferente.",
+      "Si el problema persiste, radica en TOOLI → Plataforma SAVIO → 'Otros incidentes de SAVIO'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Código estudiantil",
+      "Nombre del curso al que intenta acceder",
+      "Descripción del error"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario no puede recuperar su contraseña.",
+        "El curso no aparece aunque el usuario está inscrito.",
+        "SAVIO muestra error técnico persistente."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario no ha intentado recuperar su contraseña.",
+        "El curso no está activo en el período actual."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte SAVIO - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Sin acceso SAVIO - [Nombre usuario] - [Curso]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] y código [código] no puede acceder a SAVIO. Curso: [nombre]. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_savio_002",
+    "kind": "faq",
+    "title": "Problemas con evaluación o encuesta en SAVIO",
+    "category": "plataforma_virtual",
+    "service": "Plataforma SAVIO",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "evaluacion SAVIO",
+      "quiz SAVIO",
+      "encuesta SAVIO",
+      "no puedo hacer evaluacion",
+      "ejecucion evaluacion"
+    ],
+    "user_problem_examples": [
+      "No puedo hacer el quiz en SAVIO",
+      "La evaluación de SAVIO se cerró antes de tiempo",
+      "La encuesta de SAVIO no carga",
+      "El examen virtual se cerró solo y no pude terminar"
+    ],
+    "answer": "Si tienes problemas para ejecutar una evaluación o encuesta en SAVIO, actúa rápido y documenta el error con capturas de pantalla. Chrome es el navegador más compatible.",
+    "self_service_steps": [
+      "Verifica que el plazo de la evaluación o encuesta aún está abierto.",
+      "Usa Google Chrome como navegador.",
+      "Limpia el caché antes de intentar nuevamente.",
+      "Si la evaluación tiene límite de tiempo, no cierres el navegador hasta finalizar.",
+      "Radica en TOOLI → Plataforma SAVIO → 'Presento inconvenientes con la ejecución de evaluación' o 'Presento inconvenientes con la encuesta'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Código estudiantil",
+      "Nombre del curso y evaluación o encuesta afectada",
+      "Fecha y hora del problema",
+      "Capturas de pantalla del error"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El error técnico impidió completar una evaluación dentro del plazo.",
+        "La plataforma no guardó respuestas durante la evaluación.",
+        "La evaluación se cerró antes del tiempo establecido por error del sistema."
+      ],
+      "do_not_create_ticket_when": [
+        "El plazo de la evaluación ya cerró sin error técnico.",
+        "El usuario no usó el navegador recomendado."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte SAVIO - Dirección de TI UTB",
+      "priority": "alta",
+      "ticket_title_template": "Fallo evaluación/encuesta SAVIO - [Nombre usuario] - [Curso] - [Evaluación]",
+      "ticket_description_template": "El usuario [nombre] con código [código] no pudo completar [evaluación/encuesta] '[nombre]' del curso '[curso]' por error técnico. Fecha/hora: [fecha]. Adjunta capturas."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_savio_003",
+    "kind": "faq",
+    "title": "Problemas con visualización del calendario de actividades en SAVIO",
+    "category": "plataforma_virtual",
+    "service": "Plataforma SAVIO",
+    "audience": [
+      "estudiantes",
+      "docentes"
+    ],
+    "keywords": [
+      "calendario SAVIO",
+      "actividades SAVIO",
+      "no veo el calendario",
+      "fechas SAVIO",
+      "cronograma virtual"
+    ],
+    "user_problem_examples": [
+      "No puedo ver el calendario de actividades en SAVIO",
+      "Las fechas de entrega no aparecen en SAVIO",
+      "No veo las actividades programadas en el curso"
+    ],
+    "answer": "El calendario de SAVIO muestra actividades y evaluaciones programadas. Si no puedes verlo, puede ser un problema de visualización del navegador o una configuración del curso.",
+    "self_service_steps": [
+      "Actualiza la página (F5 o Ctrl+R).",
+      "Prueba desde Google Chrome.",
+      "Verifica que estás en el curso correcto y período académico activo.",
+      "Revisa si el docente ha publicado las actividades en el calendario.",
+      "Radica en TOOLI → Plataforma SAVIO → 'Presento inconvenientes con la visualización de actividades en el calendario'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Código estudiantil",
+      "Nombre del curso",
+      "Captura de pantalla"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El calendario falla técnicamente en múltiples cursos.",
+        "El problema impide conocer fechas de entrega importantes."
+      ],
+      "do_not_create_ticket_when": [
+        "El docente aún no ha publicado las actividades.",
+        "El usuario no ha probado con el navegador recomendado."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte SAVIO - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Fallo calendario actividades SAVIO - [Nombre usuario] - [Curso]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] no puede visualizar el calendario en el curso '[curso]'. Navegador: [navegador]. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_banner_001",
+    "kind": "faq",
+    "title": "Problemas al ingresar al Portal Banner",
+    "category": "academico",
+    "service": "Portal Banner",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "banner",
+      "portal academico",
+      "no puedo entrar banner",
+      "acceso banner",
+      "iceberg"
+    ],
+    "user_problem_examples": [
+      "No puedo entrar al Portal Banner",
+      "Iceberg no me deja iniciar sesión",
+      "El portal académico no carga"
+    ],
+    "answer": "El Portal Banner es el sistema de autoservicio para gestión de procesos académicos. Si no puedes ingresar, verifica que estás usando tus credenciales institucionales correctas.",
+    "self_service_steps": [
+      "Ingresa al Portal Banner con tu usuario y contraseña institucional.",
+      "Si olvidaste tu contraseña, usa la opción de recuperación.",
+      "Prueba desde un navegador diferente o limpia el caché.",
+      "Radica en TOOLI → Portal Banner → 'Presento inconvenientes al ingresar al portal web académico'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Código estudiantil o número de empleado",
+      "Descripción del error",
+      "Captura de pantalla"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario no puede recuperar su contraseña.",
+        "La cuenta fue bloqueada o desactivada.",
+        "El portal presenta error técnico persistente."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario puede recuperar su contraseña de forma autónoma.",
+        "El problema se resuelve cambiando de navegador."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico / Soporte TI - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Sin acceso Portal Banner - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con código [código] no puede ingresar al Portal Banner. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_banner_002",
+    "kind": "faq",
+    "title": "Cómo generar el recibo de pago de matrícula en Banner",
+    "category": "financiero",
+    "service": "Portal Banner",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "recibo pago",
       "matricula",
-      "horarios",
-      "solapamiento",
-      "servicios"
+      "iceberg",
+      "generar recibo",
+      "pago semestre",
+      "derechos academicos"
     ],
-    "answer": "La base de conocimiento de TOOLI esta en construccion. Los servicios priorizados para documentar son: ayuda psicologica, prestamo de salones, servicios de ayuda estudiantil, errores de matricula, horarios de matricula y solapamiento de horarios. Cuando no exista una ficha completa, TOOLI debe hacer preguntas de aclaracion antes de crear un ticket.",
-    "next_questions": [
-      "Cual es el nombre oficial del servicio?",
-      "Quien puede solicitarlo?",
-      "Cual es la respuesta inmediata que TOOLI debe dar?",
-      "En que casos se debe crear ticket?"
+    "user_problem_examples": [
+      "Cómo genero el recibo de matrícula",
+      "Dónde puedo descargar el recibo de pago",
+      "No encuentro cómo sacar el recibo de matrícula en Banner"
     ],
-    "requires_ticket": false
+    "answer": "Para generar el recibo de matrícula: ingresar a Banner → Iniciar sesión → Derechos Académicos → Generar recibo. Una vez generado, paga en los bancos o plataformas habilitadas.",
+    "self_service_steps": [
+      "Ingresa al Portal Banner con tus credenciales.",
+      "Dirígete a la sección 'Derechos Académicos'.",
+      "Selecciona 'Generar Recibo'.",
+      "Verifica que el monto y período sean correctos.",
+      "Descarga o imprime el recibo y realiza el pago en los canales habilitados."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Código estudiantil",
+      "Programa académico",
+      "Período a pagar"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El sistema no genera el recibo siguiendo los pasos correctos.",
+        "El monto del recibo es incorrecto.",
+        "El usuario tiene un bloqueo que impide el proceso."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario no sabe navegar en Banner (se le dan las instrucciones).",
+        "El período de generación de recibos aún no ha abierto."
+      ]
+    },
+    "escalation": {
+      "target_area": "Cartera y Finanzas - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Error generación recibo matrícula - [Nombre usuario] - [Período]",
+      "ticket_description_template": "El estudiante [nombre] con código [código] no puede generar el recibo de matrícula del período [período] en Banner. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_banner_003",
+    "kind": "faq",
+    "title": "Problemas con visualización de notas en Banner",
+    "category": "academico",
+    "service": "Portal Banner",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "notas banner",
+      "calificaciones",
+      "no veo notas",
+      "historial academico",
+      "notas incorrectas"
+    ],
+    "user_problem_examples": [
+      "Mis notas no aparecen en Banner",
+      "Las calificaciones en Banner están incorrectas",
+      "Banner no muestra mis notas del semestre"
+    ],
+    "answer": "Puedes consultar tus calificaciones e historial desde el Portal Banner. Si las notas no aparecen, puede ser porque el docente aún no las publicó, o porque hay un error en el sistema.",
+    "self_service_steps": [
+      "Ingresa al Portal Banner con tus credenciales.",
+      "Navega a 'Información Académica' o 'Historial Académico'.",
+      "Selecciona el período que deseas consultar.",
+      "Si las notas no aparecen, verifica que el período de publicación ya cerró.",
+      "Si hay error en las calificaciones, contacta primero a tu docente.",
+      "Radica en TOOLI → Portal Banner → 'Presento inconvenientes con visualización de notas en Banner'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Código estudiantil",
+      "Período y asignatura afectada"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "Las notas están publicadas por el docente pero no aparecen en Banner.",
+        "Hay discrepancia entre las notas reales y las mostradas."
+      ],
+      "do_not_create_ticket_when": [
+        "El docente aún no ha publicado las notas.",
+        "El usuario quiere impugnar una nota (debe hacerlo con el docente)."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Error visualización notas Banner - [Nombre usuario] - [Período]",
+      "ticket_description_template": "El estudiante [nombre] con código [código] reporta notas del período [período] incorrectas en Banner. Asignatura: [asignatura]. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_banner_004",
+    "kind": "faq",
+    "title": "Problemas al realizar la evaluación docente en Banner",
+    "category": "academico",
+    "service": "Portal Banner",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "evaluacion docente",
+      "encuesta docente",
+      "banner evaluacion",
+      "calificar profesor"
+    ],
+    "user_problem_examples": [
+      "No puedo hacer la evaluación docente en Banner",
+      "Banner no me deja completar la encuesta docente",
+      "Me da error al enviar la evaluación del docente"
+    ],
+    "answer": "La evaluación docente se realiza desde el Portal Banner durante el período habilitado. Si tienes inconvenientes técnicos, radica la solicitud en TOOLI.",
+    "self_service_steps": [
+      "Verifica que el período de evaluación docente está activo.",
+      "Ingresa al Portal Banner y busca la sección de evaluación docente.",
+      "Usa Google Chrome para mejor compatibilidad.",
+      "Radica en TOOLI → Portal Banner → 'Presento inconvenientes al realizar evaluación docente'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Código estudiantil",
+      "Nombre del docente a evaluar",
+      "Asignatura relacionada",
+      "Captura de pantalla del error"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El período está activo pero el sistema falla técnicamente.",
+        "El sistema no guarda las respuestas."
+      ],
+      "do_not_create_ticket_when": [
+        "El período de evaluación docente está cerrado."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Error evaluación docente Banner - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] con código [código] no puede completar la evaluación de [docente] en [asignatura]. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_portalfinanciero_001",
+    "kind": "faq",
+    "title": "Problemas al descargar el recibo de matrícula desde el Portal Financiero",
+    "category": "financiero",
+    "service": "Portal Financiero",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "portal financiero",
+      "recibo matricula",
+      "descargar recibo",
+      "pago financiero"
+    ],
+    "user_problem_examples": [
+      "No puedo descargar el recibo de matrícula del portal financiero",
+      "El portal financiero me da error al generar el recibo",
+      "El archivo del recibo no descarga"
+    ],
+    "answer": "El Portal Financiero permite el autoservicio para procesos financieros como la descarga del recibo de matrícula. Si tienes problemas, puede ser por un fallo técnico o un bloqueo financiero.",
+    "self_service_steps": [
+      "Ingresa al Portal Financiero con tus credenciales.",
+      "Navega a la sección de recibos o pagos.",
+      "Verifica que tu cuenta no tenga bloqueos financieros.",
+      "Intenta desde un navegador diferente o limpia el caché.",
+      "Radica en TOOLI → Portal Financiero → 'Presento inconvenientes con descarga de recibo de matrícula'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Código estudiantil",
+      "Período del recibo",
+      "Captura de pantalla del error"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El portal falla técnicamente y el usuario no puede descargar el recibo.",
+        "El recibo tiene información incorrecta.",
+        "Hay un bloqueo financiero que el usuario no puede resolver."
+      ],
+      "do_not_create_ticket_when": [
+        "El período de generación de recibos no ha abierto."
+      ]
+    },
+    "escalation": {
+      "target_area": "Cartera y Finanzas - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Error descarga recibo Portal Financiero - [Nombre usuario] - [Período]",
+      "ticket_description_template": "El estudiante [nombre] con código [código] no puede descargar el recibo de [período] desde el Portal Financiero. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_portalfinanciero_002",
+    "kind": "faq",
+    "title": "El botón de pago del Portal Financiero no funciona",
+    "category": "financiero",
+    "service": "Portal Financiero",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "boton pago",
+      "portal financiero pago",
+      "pago en linea",
+      "no puedo pagar en linea"
+    ],
+    "user_problem_examples": [
+      "El botón de pago del portal no funciona",
+      "No puedo hacer el pago en línea de la matrícula",
+      "El portal financiero me da error al pagar"
+    ],
+    "answer": "Si el botón de pago no funciona, puede ser por un problema técnico del portal, restricciones del navegador o un inconveniente con la pasarela de pagos. Como alternativa puedes pagar en los bancos habilitados.",
+    "self_service_steps": [
+      "Intenta el pago desde Google Chrome en modo incógnito.",
+      "Desactiva bloqueadores de anuncios o extensiones del navegador.",
+      "Verifica que la información de tu método de pago sea correcta.",
+      "Intenta desde un dispositivo diferente.",
+      "Como alternativa, realiza el pago en los bancos o puntos físicos habilitados.",
+      "Radica en TOOLI → Portal Financiero → 'Presento inconvenientes con el botón de pago del portal financiero'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Código estudiantil",
+      "Descripción del error",
+      "Navegador utilizado",
+      "Captura de pantalla"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El botón falla en múltiples navegadores y dispositivos.",
+        "El pago fue debitado pero el sistema no lo registró."
+      ],
+      "do_not_create_ticket_when": [
+        "El problema se resuelve cambiando de navegador.",
+        "El usuario puede realizar el pago presencialmente."
+      ]
+    },
+    "escalation": {
+      "target_area": "Cartera y Finanzas - UTB",
+      "priority": "alta",
+      "ticket_title_template": "Fallo botón pago Portal Financiero - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] con código [código] no puede completar el pago en línea. Navegador: [navegador]. Error: [descripción]. Ya intentó desde múltiples navegadores."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_primo_001",
+    "kind": "faq",
+    "title": "No puedo acceder a las bases de datos de la biblioteca",
+    "category": "biblioteca",
+    "service": "Primo y Bases de Datos",
+    "audience": [
+      "estudiantes",
+      "docentes"
+    ],
+    "keywords": [
+      "bases de datos",
+      "primo",
+      "biblioteca",
+      "recursos electronicos",
+      "ALMA",
+      "ELOGIM",
+      "acceso biblioteca digital"
+    ],
+    "user_problem_examples": [
+      "No puedo acceder a las bases de datos de la biblioteca",
+      "El sistema de consulta no me deja entrar",
+      "La base de datos me pide contraseña y no sé cuál es"
+    ],
+    "answer": "El servicio Primo y Bases de Datos está respaldado por ALMA, PRIMO y ELOGIM. Accede con tus credenciales institucionales. Desde fuera del campus puede necesitarse VPN.",
+    "self_service_steps": [
+      "Ingresa al portal de la Biblioteca UTB desde el sitio web oficial.",
+      "Haz clic en 'Bases de datos' o 'Recursos electrónicos'.",
+      "Inicia sesión con tu correo y contraseña institucional.",
+      "Si accedes desde fuera del campus, conéctate a la VPN institucional.",
+      "Radica en TOOLI → Primo y Bases de Datos → 'Presento inconvenientes de acceso a las bases de datos'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Código o número de empleado",
+      "Nombre de la base de datos",
+      "Descripción del error",
+      "Captura de pantalla"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario no puede acceder con credenciales correctas.",
+        "Una base de datos presenta errores técnicos persistentes."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario está accediendo desde fuera del campus sin VPN."
+      ]
+    },
+    "escalation": {
+      "target_area": "Biblioteca - Sistemas UTB",
+      "priority": "normal",
+      "ticket_title_template": "Problema acceso bases de datos - [Nombre usuario] - [Base de datos]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] no puede acceder a [base de datos]. Ubicación: [campus/remoto]. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_primo_002",
+    "kind": "faq",
+    "title": "No puedo visualizar el contenido de un recurso en la biblioteca digital",
+    "category": "biblioteca",
+    "service": "Primo y Bases de Datos",
+    "audience": [
+      "estudiantes",
+      "docentes"
+    ],
+    "keywords": [
+      "no carga articulo",
+      "PDF no abre biblioteca",
+      "recurso no disponible",
+      "libro electronico no abre"
+    ],
+    "user_problem_examples": [
+      "Puedo buscar pero el artículo no abre",
+      "El PDF de la biblioteca no carga",
+      "El libro electrónico dice que no está disponible"
+    ],
+    "answer": "Si puedes buscar pero no puedes visualizar el contenido, puede ser por restricciones de la base de datos, acceso remoto sin VPN o problema técnico.",
+    "self_service_steps": [
+      "Verifica que estás dentro del campus o conectado por VPN.",
+      "Intenta desde un navegador diferente.",
+      "Deshabilita bloqueadores de anuncios.",
+      "Radica en TOOLI → Primo y Bases de Datos → 'Presento inconvenientes de visualización de contenido'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Enlace o nombre del recurso",
+      "Navegador utilizado",
+      "Descripción del error",
+      "Captura de pantalla"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El recurso falla técnicamente estando dentro del campus.",
+        "El problema ocurre con múltiples recursos."
+      ],
+      "do_not_create_ticket_when": [
+        "El recurso no está disponible por restricciones de licencia.",
+        "El usuario accede desde fuera sin VPN."
+      ]
+    },
+    "escalation": {
+      "target_area": "Biblioteca - Sistemas UTB",
+      "priority": "normal",
+      "ticket_title_template": "Fallo visualización recurso biblioteca - [Recurso] - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] no puede visualizar '[recurso]'. Dentro del campus: [sí/no]. Navegador: [navegador]. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_videoconf_001",
+    "kind": "faq",
+    "title": "No puedo unirme a una reunión de Teams",
+    "category": "videoconferencia",
+    "service": "Soluciones de Videoconferencia",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "reunion teams",
+      "no puedo unirme",
+      "link teams no funciona",
+      "clase virtual"
+    ],
+    "user_problem_examples": [
+      "No puedo entrar a la reunión de Teams",
+      "El link de la clase virtual no me abre",
+      "Teams me dice que la reunión no existe"
+    ],
+    "answer": "Si no puedes unirte a una reunión, puede ser porque el enlace expiró, no usas tu cuenta institucional, o hay un problema técnico. Intenta siempre desde la versión web primero.",
+    "self_service_steps": [
+      "Verifica que el enlace de la reunión es el correcto.",
+      "Asegúrate de ingresar con tu cuenta @utb.edu.co.",
+      "Intenta desde teams.microsoft.com en el navegador.",
+      "Verifica que tu micrófono y cámara funcionan y Teams tiene permisos.",
+      "Radica en TOOLI → Soluciones de Videoconferencia → 'Presento inconvenientes para unirme a una reunión de TEAMS'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Descripción del error",
+      "Tipo de dispositivo",
+      "Captura de pantalla"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario usa cuenta correcta y enlace válido pero no puede unirse.",
+        "El problema es recurrente."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario usaba cuenta personal.",
+        "La reunión ya finalizó."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Error unirse reunión Teams - [Nombre usuario] - [Fecha]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] no puede unirse a reunión de Teams con cuenta institucional. Dispositivo: [tipo]. Error: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_videoconf_002",
+    "kind": "faq",
+    "title": "Cómo solicitar orientación para ubicar grabaciones de reuniones en Teams",
+    "category": "videoconferencia",
+    "service": "Soluciones de Videoconferencia",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "grabacion teams",
+      "donde esta grabacion",
+      "ver grabacion clase",
+      "acceder grabacion"
+    ],
+    "user_problem_examples": [
+      "No encuentro la grabación de la clase virtual",
+      "Dónde queda guardada la grabación de Teams",
+      "Cómo accedo a las grabaciones de mis clases"
+    ],
+    "answer": "Las grabaciones de Teams se guardan automáticamente en OneDrive del organizador y el enlace aparece en el chat de la reunión. Si eres estudiante, solicita el enlace al docente organizador.",
+    "self_service_steps": [
+      "Revisa el chat de la reunión de Teams donde ocurrió la sesión.",
+      "La grabación aparece como enlace en el chat después de finalizar.",
+      "Si eres el organizador, búscala en tu OneDrive en la carpeta 'Grabaciones'.",
+      "Si no ves el enlace, solicítalo al organizador.",
+      "Radica en TOOLI → Soluciones de Videoconferencia → 'Solicitar orientación para ubicar las grabaciones'."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Correo institucional",
+      "Fecha y hora de la reunión",
+      "Nombre o correo del organizador"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "La grabación no aparece en OneDrive ni en el chat después de 24 horas.",
+        "La grabación se interrumpió por error técnico."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario no sabe dónde buscar (se le dan las instrucciones).",
+        "El organizador no activó la grabación."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Grabación no disponible Teams - [Nombre usuario] - [Fecha reunión]",
+      "ticket_description_template": "El usuario [nombre] no puede acceder a la grabación del [fecha] organizada por [organizador]. Ya verificó el chat y OneDrive."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_talentotech_psicosocial_001",
+    "kind": "faq",
+    "title": "Solicitar acompañamiento psicosocial en TalentoTech",
+    "category": "talentotech_bienestar",
+    "service": "Acompañamiento Psicosocial - TalentoTech",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "psicosocial",
+      "apoyo psicologico",
+      "salud mental",
+      "acompañamiento talentotech",
+      "estres bootcamp",
+      "dificultad personal"
+    ],
+    "user_problem_examples": [
+      "Necesito apoyo psicológico durante el bootcamp",
+      "Estoy teniendo dificultades personales que afectan mi formación",
+      "Quiero hablar con alguien sobre mi salud mental",
+      "Me siento agobiado por el ritmo del programa TalentoTech"
+    ],
+    "answer": "TalentoTech ofrece acompañamiento psicosocial para apoyarte en situaciones emocionales, personales o psicológicas que puedan afectar tu salud mental y desempeño en el programa. Puedes solicitarlo de forma confidencial a través de TOOLI.",
+    "self_service_steps": [
+      "Ingresa a TOOLI y selecciona la categoría 'TalentoTech'.",
+      "Selecciona el servicio 'Acompañamiento Psicosocial'.",
+      "Completa el formulario indicando tu modalidad y el motivo de tu solicitud.",
+      "Incluye el nombre de tu bootcamp y cohorte.",
+      "Envía la solicitud y espera la respuesta del equipo de bienestar."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Tipo y número de documento de identidad",
+      "Bootcamp en el que se encuentra",
+      "Cohorte",
+      "Correo electrónico",
+      "Número de teléfono",
+      "Asunto de la solicitud",
+      "Descripción de la situación"
+    ],
+    "ticket_policy": {
+      "requires_ticket": true,
+      "create_ticket_when": [
+        "Siempre que el estudiante solicite acompañamiento psicosocial.",
+        "Cuando el estudiante presente dificultades emocionales que afecten su proceso formativo."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario solo solicita información general sin necesitar acompañamiento."
+      ]
+    },
+    "escalation": {
+      "target_area": "Equipo de Bienestar - TalentoTech",
+      "priority": "alta",
+      "ticket_title_template": "Solicitud acompañamiento psicosocial - [Nombre] - Bootcamp [Bootcamp]",
+      "ticket_description_template": "El estudiante [nombre] del bootcamp [bootcamp], cohorte [cohorte], solicita acompañamiento psicosocial. Contacto: [correo] / [teléfono]. Motivo: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_talentotech_pqrs_001",
+    "kind": "faq",
+    "title": "Cómo radicar una PQRS en TalentoTech",
+    "category": "talentotech_pqrs",
+    "service": "Consultas, Peticiones, Quejas, Reclamos, Sugerencias TalentoTech",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "pqrs talentotech",
+      "queja talento tech",
+      "reclamo bootcamp",
+      "sugerencia programa",
+      "peticion talentotech",
+      "consulta inscripcion talentotech"
+    ],
+    "user_problem_examples": [
+      "Quiero radicar una queja sobre el programa TalentoTech",
+      "Tengo una duda sobre mi inscripción en TalentoTech",
+      "Quiero hacer una sugerencia sobre el bootcamp",
+      "Cómo hago un reclamo sobre fechas o procesos del programa"
+    ],
+    "answer": "A través de TOOLI puedes radicar cualquier consulta, petición, queja, reclamo o sugerencia relacionada con TalentoTech, incluyendo dudas sobre inscripción, matrícula, formación, certificados, eventos y funcionamiento del programa.",
+    "self_service_steps": [
+      "Ingresa a TOOLI y selecciona la categoría 'TalentoTech'.",
+      "Selecciona 'Consultas, Peticiones, Quejas, Reclamos, Sugerencias TalentoTech'.",
+      "Selecciona tu modalidad y el tipo de solicitud.",
+      "Completa el formulario con tus datos y descripción detallada.",
+      "Adjunta documentos de soporte si aplica.",
+      "Envía y conserva el número de ticket para seguimiento."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Tipo y número de documento de identidad",
+      "Número de teléfono",
+      "Correo electrónico",
+      "Cohorte",
+      "Bootcamp en el que se encuentra",
+      "Tipo de solicitud",
+      "Asunto",
+      "Descripción detallada"
+    ],
+    "ticket_policy": {
+      "requires_ticket": true,
+      "create_ticket_when": [
+        "Siempre que el estudiante requiera radicar cualquier tipo de PQRS relacionada con TalentoTech."
+      ],
+      "do_not_create_ticket_when": [
+        "La consulta puede resolverse con información general disponible en el portal."
+      ]
+    },
+    "escalation": {
+      "target_area": "Coordinación del Programa TalentoTech",
+      "priority": "normal",
+      "ticket_title_template": "PQRS TalentoTech - [Tipo solicitud] - [Nombre] - Bootcamp [Bootcamp]",
+      "ticket_description_template": "El estudiante [nombre] del bootcamp [bootcamp], cohorte [cohorte], radica [tipo de solicitud]: '[asunto]'. Contacto: [correo] / [teléfono]. Descripción: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_talentotech_academico_001",
+    "kind": "faq",
+    "title": "Solicitar soporte académico durante la formación en TalentoTech",
+    "category": "talentotech_academico",
+    "service": "Soporte Académico y Aprendizaje durante Formación - TalentoTech",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "soporte academico talentotech",
+      "duda curso bootcamp",
+      "ayuda clase talentotech",
+      "dificultad aprendizaje",
+      "problema asistencias talentotech"
+    ],
+    "user_problem_examples": [
+      "Tengo dificultades con el contenido de mi curso en TalentoTech",
+      "No entiendo un tema del bootcamp y necesito ayuda",
+      "Quiero solicitar apoyo académico en mi formación",
+      "Tengo problemas con clases, notas o asistencias en TalentoTech"
+    ],
+    "answer": "TalentoTech ofrece soporte académico para situaciones con tus clases, profesores, notas y asistencias. Si tienes dificultades de aprendizaje o necesitas acompañamiento, solicítalo a través de TOOLI.",
+    "self_service_steps": [
+      "Ingresa a TOOLI y selecciona la categoría 'TalentoTech'.",
+      "Selecciona 'Soporte Académico y Aprendizaje durante Formación'.",
+      "Indica el código del curso (cópialo desde la cabecera del curso en AulaTech - SAVIO).",
+      "Selecciona tu modalidad y el motivo de la solicitud.",
+      "Completa el formulario con tus datos y descripción clara.",
+      "Envía la solicitud."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Tipo y número de documento de identidad",
+      "Código del curso relacionado",
+      "Número de teléfono",
+      "Correo electrónico",
+      "Cohorte",
+      "Bootcamp en el que se encuentra",
+      "Asunto",
+      "Descripción del problema académico"
+    ],
+    "ticket_policy": {
+      "requires_ticket": true,
+      "create_ticket_when": [
+        "Siempre que el estudiante requiera acompañamiento en su proceso de aprendizaje.",
+        "Cuando tenga situaciones con clases, notas o asistencias que requieran gestión."
+      ],
+      "do_not_create_ticket_when": [
+        "La duda puede resolverse consultando directamente al docente."
+      ]
+    },
+    "escalation": {
+      "target_area": "Coordinación Académica TalentoTech",
+      "priority": "normal",
+      "ticket_title_template": "Soporte Académico TalentoTech - [Nombre] - Curso [Código curso]",
+      "ticket_description_template": "El estudiante [nombre] del bootcamp [bootcamp], cohorte [cohorte], solicita soporte académico del curso [código]. Motivo: [descripción]. Contacto: [correo] / [teléfono]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_talentotech_soporte_tec_001",
+    "kind": "faq",
+    "title": "Solicitar soporte tecnológico en plataformas de TalentoTech",
+    "category": "talentotech_tecnologia",
+    "service": "Soporte Tecnológico - TalentoTech",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "soporte tecnico talentotech",
+      "plataforma talento tech",
+      "error aula tech",
+      "problema sistema talentotech",
+      "actualizar datos talentotech"
+    ],
+    "user_problem_examples": [
+      "Tengo un problema técnico con la plataforma de TalentoTech",
+      "No puedo acceder a AulaTech",
+      "Necesito actualizar mis datos de identificación en el sistema",
+      "La plataforma de TalentoTech me da un error"
+    ],
+    "answer": "El Soporte Tecnológico de TalentoTech atiende incidentes con las plataformas del programa y solicitudes de actualización de datos de identificación en los sistemas.",
+    "self_service_steps": [
+      "Verifica que tienes conexión a internet estable.",
+      "Intenta desde un navegador diferente o limpiando el caché.",
+      "Ingresa a TOOLI y selecciona la categoría 'TalentoTech'.",
+      "Selecciona 'Soporte Tecnológico'.",
+      "Indica si es una incidencia (problema técnico) o requerimiento (cambio o actualización).",
+      "Completa el formulario con tus datos y descripción del problema."
+    ],
+    "required_data": [
+      "Nombre completo",
+      "Tipo y número de documento de identidad",
+      "Número de teléfono",
+      "Correo electrónico",
+      "Cohorte",
+      "Bootcamp en el que se encuentra",
+      "Tipo de solicitud (incidencia o requerimiento)",
+      "Asunto",
+      "Descripción del problema",
+      "Captura de pantalla del error si aplica"
+    ],
+    "ticket_policy": {
+      "requires_ticket": true,
+      "create_ticket_when": [
+        "Siempre que el estudiante tenga un problema técnico con las plataformas de TalentoTech.",
+        "Cuando se requiera actualización de datos de identificación.",
+        "Cuando haya errores que impidan el uso de las herramientas del programa."
+      ],
+      "do_not_create_ticket_when": [
+        "El problema se resuelve limpiando el caché o cambiando de navegador.",
+        "El usuario no ha intentado los pasos básicos."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte TI - TalentoTech",
+      "priority": "normal",
+      "ticket_title_template": "Soporte Tecnológico TalentoTech - [Nombre] - [Tipo solicitud]",
+      "ticket_description_template": "El estudiante [nombre] del bootcamp [bootcamp], cohorte [cohorte], reporta [incidencia/requerimiento]: '[asunto]'. Contacto: [correo] / [teléfono]. Descripción: [descripción]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_banner_horario_001",
+    "kind": "faq",
+    "title": "¿Cómo reviso mi horario de clases?",
+    "category": "procesos_academicos",
+    "service": "Portal Banner - Autoservicio Académico",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "horario",
+      "clases",
+      "semana",
+      "salon",
+      "materias inscritas",
+      "banner",
+      "horario de clases"
+    ],
+    "user_problem_examples": [
+      "¿Cómo veo mi horario de clases?",
+      "No sé en qué salón tengo clase",
+      "¿Dónde encuentro mis horarios en Banner?",
+      "Quiero saber a qué hora son mis materias"
+    ],
+    "answer": "Puedes consultar tu horario de clases directamente desde el portal Banner siguiendo unos sencillos pasos. Una vez dentro, el sistema te mostrará tu horario en formato de calendario semanal.",
+    "self_service_steps": [
+      "Entra a www.utb.edu.co, ve a MI UTB y selecciona 'Banner'.",
+      "Inicia sesión con tu correo y contraseña institucional.",
+      "Haz clic en la pestaña 'Alumno' > 'Inscripción' > 'Semana de un vistazo'.",
+      "Tu horario aparecerá automáticamente en formato de calendario.",
+      "Si tu horario no se muestra, haz clic en 'Siguiente semana' hasta encontrar las fechas con clases asignadas.",
+      "Para ver detalles como el salón, haz clic sobre el nombre de la materia."
+    ],
+    "required_data": [],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El horario no aparece después de navegar semanas hacia adelante.",
+        "Las materias inscritas no coinciden con lo esperado."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario aún no ha navegado semanas hacia adelante en el calendario.",
+        "El usuario no ha iniciado sesión correctamente."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Horario no visible en Banner - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] con correo [correo] no puede visualizar su horario en Banner tras intentar los pasos de autoservicio."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_portalfinanciero_comprobante_001",
+    "kind": "faq",
+    "title": "¿Cuáles son los pasos para descargar mi comprobante de matrícula?",
+    "category": "procesos_financieros",
+    "service": "Portal Financiero UTB",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "comprobante matrícula",
+      "recibo matrícula",
+      "portal financiero",
+      "derechos académicos",
+      "descargar recibo"
+    ],
+    "user_problem_examples": [
+      "¿Cómo descargo mi comprobante de matrícula?",
+      "¿Dónde genero el recibo de pago de la matrícula?",
+      "Necesito el comprobante de matrícula para ICETEX",
+      "No encuentro cómo descargar el recibo de matrícula"
+    ],
+    "answer": "Puedes descargar tu comprobante de matrícula desde el Portal Financiero de la UTB usando tu código de estudiante.",
+    "self_service_steps": [
+      "Accede a la página web de la universidad y entra a la sección 'MI UTB', luego haz clic en 'Portal Financiero', o ingresa directamente a https://iceberg-niif.utb.edu.co/iceberg-pf/.",
+      "Inicia sesión con tu código de estudiante (T000) y tu contraseña.",
+      "Verifica el Captcha.",
+      "Dirígete a la opción 'Derechos Académicos' para visualizar y generar el comprobante."
+    ],
+    "required_data": [
+      "Código de estudiante (T000)",
+      "Contraseña institucional"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El comprobante no se genera después de seguir los pasos correctamente.",
+        "El portal financiero presenta un error técnico persistente."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario no recuerda su contraseña (se redirige a recuperación).",
+        "El usuario aún no ha intentado los pasos básicos."
+      ]
+    },
+    "escalation": {
+      "target_area": "Servicios Financieros - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Error al generar comprobante de matrícula - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] con código [T000] no puede generar su comprobante de matrícula desde el Portal Financiero."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_banner_calificaciones_001",
+    "kind": "faq",
+    "title": "¿Cómo puedo ver mis calificaciones finales de un semestre que ya terminé?",
+    "category": "procesos_academicos",
+    "service": "Portal Banner - Autoservicio Académico",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "calificaciones finales",
+      "notas finales",
+      "historial académico",
+      "semestre anterior",
+      "banner notas"
+    ],
+    "user_problem_examples": [
+      "¿Cómo veo mis notas finales del semestre pasado?",
+      "Quiero consultar mis calificaciones de un periodo anterior",
+      "¿Dónde aparecen las notas definitivas en Banner?"
+    ],
+    "answer": "Puedes consultar tus calificaciones finales de cualquier semestre concluido directamente desde el Portal Banner.",
+    "self_service_steps": [
+      "Ingresa a www.utb.edu.co, ve a la sección 'MI UTB' y selecciona 'Banner'.",
+      "Inicia sesión con tu correo electrónico institucional y tu contraseña.",
+      "Dirígete a la pestaña 'Alumno' > 'Registros Académicos' > 'Calificaciones finales'.",
+      "Selecciona el periodo académico que deseas consultar y el sistema te mostrará tus notas definitivas."
+    ],
+    "required_data": [],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "Las calificaciones de un periodo cerrado no aparecen en el sistema.",
+        "Hay un error en las notas registradas."
+      ],
+      "do_not_create_ticket_when": [
+        "El semestre aún no ha cerrado oficialmente.",
+        "El docente aún no ha publicado las notas."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Calificaciones finales no visibles - [Nombre usuario] - Periodo [periodo]",
+      "ticket_description_template": "El estudiante [nombre] no puede visualizar sus calificaciones finales del periodo [periodo] en Banner."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_banner_calificaciones_002",
+    "kind": "faq",
+    "title": "¿Dónde reviso detalladamente mis calificaciones de cada corte o parcial del semestre actual?",
+    "category": "procesos_academicos",
+    "service": "Portal Banner - Autoservicio Académico",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "detalle calificaciones",
+      "notas corte",
+      "parciales",
+      "calificaciones semestre actual",
+      "banner notas corte"
+    ],
+    "user_problem_examples": [
+      "¿Cómo veo mis notas por corte?",
+      "Quiero saber cuánto saqué en cada parcial",
+      "¿Dónde aparece el desglose de mis calificaciones?"
+    ],
+    "answer": "Puedes ver el desglose de tus calificaciones por corte o parcial del semestre actual desde la sección 'Detalle de calificaciones' en Banner.",
+    "self_service_steps": [
+      "Ingresa a www.utb.edu.co, ve a la sección 'MI UTB' y selecciona 'Banner'.",
+      "Inicia sesión con tu correo electrónico institucional y tu contraseña.",
+      "Dirígete a la pestaña 'Alumno' > 'Registros Académicos' > 'Detalle de calificaciones'.",
+      "Selecciona tu semestre actual (o el que desees revisar) para ver el desglose exacto de la nota obtenida en cada corte."
+    ],
+    "required_data": [],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "Las notas por corte no aparecen cuando ya deberían estar publicadas.",
+        "Hay una nota incorrecta registrada en el sistema."
+      ],
+      "do_not_create_ticket_when": [
+        "El docente aún no ha publicado las notas del corte.",
+        "El periodo de notas aún no ha cerrado."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Detalle de calificaciones no visible - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] no puede visualizar el detalle de calificaciones por corte en Banner para el semestre [periodo]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_icetex_001",
+    "kind": "faq",
+    "title": "¿Cuál es el paso a paso para realizar la renovación de mi crédito ICETEX?",
+    "category": "procesos_financieros",
+    "service": "Renovación Crédito ICETEX",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "ICETEX",
+      "renovación crédito",
+      "crédito educativo",
+      "renovar icetex",
+      "constancia icetex"
+    ],
+    "user_problem_examples": [
+      "¿Cómo renuevo mi crédito ICETEX?",
+      "No sé cómo hacer la renovación del ICETEX en la UTB",
+      "¿Qué documentos necesito para renovar el ICETEX?"
+    ],
+    "answer": "Para renovar tu crédito ICETEX debes completar 3 fases: actualizar tus datos en ICETEX, descargar tu recibo de matrícula y cargar los documentos en la plataforma de renovación de la UTB.",
+    "self_service_steps": [
+      "FASE 1 - Actualización en ICETEX: Ingresa a la plataforma web de ICETEX, actualiza tus datos y genera la constancia. Imprime el formulario, fírmalo a mano y escanéalo en orientación vertical.",
+      "FASE 2 - Descarga del recibo: Ingresa al portal de la universidad y descarga tu comprobante de matrícula actualizado en formato PDF.",
+      "FASE 3 - Renovación en la UTB: Ingresa a https://renovacionicetex.utb.edu.co/, llena tus datos y adjunta la constancia de ICETEX firmada y tu recibo de matrícula."
+    ],
+    "required_data": [
+      "Constancia de ICETEX firmada y escaneada (orientación vertical)",
+      "Comprobante de matrícula en PDF"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "La plataforma de renovación https://renovacionicetex.utb.edu.co/ no permite cargar los documentos.",
+        "El sistema presenta un error técnico durante el proceso."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario no ha completado los pasos previos (constancia firmada o recibo descargado).",
+        "El usuario tiene dudas sobre el proceso en la plataforma ICETEX (debe contactar directamente a ICETEX)."
+      ]
+    },
+    "escalation": {
+      "target_area": "Servicios Financieros - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Error renovación ICETEX - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] con código [T000] reporta un problema técnico al intentar renovar su crédito ICETEX en la plataforma institucional."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_banner_eval_docentes_001",
+    "kind": "faq",
+    "title": "¿Cuál es el paso a paso para realizar la evaluación de mis profesores?",
+    "category": "procesos_academicos",
+    "service": "Portal Banner - Autoservicio Académico",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "evaluación docente",
+      "evaluar profesor",
+      "encuesta docente",
+      "banner evaluacion",
+      "evaluación profesores"
+    ],
+    "user_problem_examples": [
+      "¿Cómo evalúo a mis profesores?",
+      "¿Dónde hago la evaluación docente?",
+      "No encuentro la opción de evaluar profesores en Banner"
+    ],
+    "answer": "La evaluación de tus profesores se realiza directamente desde el Portal Banner durante el periodo habilitado por la universidad.",
+    "self_service_steps": [
+      "Ingresa a Banner con tu usuario y contraseña.",
+      "Dirígete a la pestaña 'Alumnos' > 'Registro de alumnos' > 'Evaluación de docentes'.",
+      "Selecciona el periodo académico correspondiente (ej. 2026-10 para pregrado) y haz clic en 'Enviar'.",
+      "Elige al profesor que vas a evaluar y diligencia la encuesta seleccionando tu nivel de acuerdo con cada enunciado.",
+      "Añade tus comentarios sobre los aspectos positivos y aquellos por mejorar del docente.",
+      "Haz clic en 'Completar' para terminar.",
+      "Repite este proceso para cada uno de tus profesores."
+    ],
+    "required_data": [],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "La opción de evaluación docente no aparece dentro del período habilitado.",
+        "El sistema no guarda la evaluación al hacer clic en 'Completar'."
+      ],
+      "do_not_create_ticket_when": [
+        "El período de evaluación docente aún no ha sido habilitado.",
+        "El período de evaluación ya cerró."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Error evaluación docente en Banner - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] no puede completar la evaluación docente en Banner durante el periodo habilitado [periodo]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_banner_malla_001",
+    "kind": "faq",
+    "title": "¿Cómo puedo consultar mi plan de estudios o malla curricular?",
+    "category": "procesos_academicos",
+    "service": "Portal Banner - Autoservicio Académico",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "malla curricular",
+      "plan de estudios",
+      "pensum",
+      "materias carrera",
+      "banner malla"
+    ],
+    "user_problem_examples": [
+      "¿Cómo veo mi malla curricular?",
+      "¿Dónde encuentro el plan de estudios de mi carrera?",
+      "Quiero saber qué materias debo ver en mi programa"
+    ],
+    "answer": "Puedes consultar la malla curricular de tu programa académico directamente desde el Portal Banner.",
+    "self_service_steps": [
+      "Ingresa a Banner con tu usuario y contraseña.",
+      "Selecciona la pestaña 'Alumnos' > 'Inscripción'.",
+      "Haz clic en 'Planes de estudio de todas las carreras'.",
+      "Selecciona la escuela a la que perteneces y luego tu programa académico.",
+      "Elige la malla curricular correspondiente a tu año de ingreso o reingreso a la UTB."
+    ],
+    "required_data": [],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "La malla curricular no aparece disponible para el programa del estudiante.",
+        "La información de la malla está desactualizada o incorrecta."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario no ha seguido los pasos correctos de navegación en Banner."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Malla curricular no disponible en Banner - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] del programa [programa] no puede visualizar su malla curricular en Banner."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_correo_desbloqueo_001",
+    "kind": "faq",
+    "title": "¿Cómo puedo desbloquear mi cuenta de correo institucional (Office 365)?",
+    "category": "correo",
+    "service": "Correo Institucional Office 365 - Outlook",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "desbloquear cuenta",
+      "cuenta bloqueada",
+      "correo bloqueado",
+      "office 365",
+      "no puedo entrar correo"
+    ],
+    "user_problem_examples": [
+      "Mi cuenta de correo está bloqueada",
+      "No puedo entrar a mi correo institucional",
+      "¿Cómo desbloqueo mi cuenta de Office 365?"
+    ],
+    "answer": "Puedes desbloquear tu cuenta de correo institucional directamente desde el portal de Microsoft, sin necesidad de contactar soporte, siempre que tengas acceso a tu correo alternativo.",
+    "self_service_steps": [
+      "Ingresa al portal http://portal.utb.edu.co.",
+      "Escribe tu correo institucional y haz clic en '¿No puede acceder a su cuenta?'.",
+      "Selecciona la opción 'Cuenta profesional o educativa'.",
+      "En la pantalla de comprobación, elige que se envíe un código a tu correo electrónico alternativo.",
+      "Revisa tu correo alternativo, digita el código de verificación recibido y haz clic en 'Siguiente'.",
+      "El sistema mostrará un ícono de comprobación verde indicando que tu cuenta ha sido desbloqueada."
+    ],
+    "required_data": [
+      "Correo institucional",
+      "Acceso al correo electrónico alternativo registrado"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario no tiene acceso a su correo alternativo y no puede completar la verificación.",
+        "La cuenta no se desbloquea después de seguir los pasos."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario no ha intentado el proceso de autodesbloqueo.",
+        "El usuario tiene acceso al correo alternativo."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Cuenta correo bloqueada sin acceso a alternativo - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] no puede desbloquear su cuenta institucional porque no tiene acceso a su correo alternativo."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_correo_contrasena_001",
+    "kind": "faq",
+    "title": "¿Cuál es el paso a paso para restablecer o cambiar la contraseña de mi correo institucional?",
+    "category": "correo",
+    "service": "Correo Institucional Office 365 - Outlook",
+    "audience": [
+      "estudiantes",
+      "docentes",
+      "administrativos"
+    ],
+    "keywords": [
+      "restablecer contraseña",
+      "cambiar contraseña",
+      "olvidé contraseña",
+      "password correo",
+      "recuperar contraseña institucional"
+    ],
+    "user_problem_examples": [
+      "Olvidé mi contraseña del correo institucional",
+      "¿Cómo cambio la contraseña de mi correo UTB?",
+      "No recuerdo mi contraseña y no puedo entrar"
+    ],
+    "answer": "Puedes restablecer tu contraseña institucional de forma autónoma desde el portal de Microsoft, siguiendo los pasos de verificación.",
+    "self_service_steps": [
+      "Ingresa al portal http://portal.utb.edu.co, escribe tu correo institucional y haz clic en '¿No puede acceder a su cuenta?'.",
+      "Selecciona la opción 'Cuenta profesional o educativa'.",
+      "En el paso de comprobación, elige enviar un código de verificación a tu correo electrónico alternativo.",
+      "Digita el código recibido en el sistema y presiona 'Siguiente'.",
+      "Escribe tu nueva contraseña y confírmala. Debe tener mínimo 8 caracteres, incluir al menos una letra mayúscula, números y un carácter especial (!, $, #, %).",
+      "Haz clic en 'Finalizar'. El sistema confirmará con un ícono verde que la contraseña se restableciste exitosamente."
+    ],
+    "required_data": [
+      "Correo institucional",
+      "Acceso al correo electrónico alternativo registrado"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El usuario no tiene acceso a su correo alternativo.",
+        "El restablecimiento falla después de seguir los pasos correctamente."
+      ],
+      "do_not_create_ticket_when": [
+        "El usuario tiene acceso al correo alternativo y puede completar el proceso.",
+        "El usuario no ha intentado el proceso de autogestión."
+      ]
+    },
+    "escalation": {
+      "target_area": "Soporte Office 365 - Dirección de TI UTB",
+      "priority": "normal",
+      "ticket_title_template": "Restablecimiento de contraseña fallido - [Nombre usuario]",
+      "ticket_description_template": "El usuario [nombre] con correo [correo] no puede restablecer su contraseña institucional porque no tiene acceso a su correo alternativo o el proceso falla."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_grado_001",
+    "kind": "faq",
+    "title": "¿Cuál es el paso a paso y qué documentos necesito para realizar mi proceso de grado?",
+    "category": "procesos_academicos",
+    "service": "Proceso de Grado - Registro Académico",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "proceso de grado",
+      "graduación",
+      "título",
+      "diploma",
+      "requisitos grado",
+      "inscripción grado",
+      "derechos de grado"
+    ],
+    "user_problem_examples": [
+      "¿Qué necesito para graduarme?",
+      "¿Cómo inicio el proceso de grado?",
+      "¿Cuáles son los documentos para el grado?",
+      "¿Cómo me inscribo para la graduación?"
+    ],
+    "answer": "El proceso de grado se compone de 5 fases que debes completar en orden para obtener tu título profesional.",
+    "self_service_steps": [
+      "FASE 1 - Cumplir los requisitos: Verifica tener aprobado todo tu plan de estudios, la práctica profesional, la opción de grado y un mínimo de 100 puntos en el promedio de las pruebas Saber Pro (para pregrado).",
+      "FASE 2 - Preparar los documentos: Reúne fotocopia de tu cédula, paz y salvo de la biblioteca, resultados del ICFES, recibo pagado de la Estampilla Pro-Cultura y tu reporte de avance académico.",
+      "FASE 3 - Realizar la inscripción: Inscríbete formalmente al grado dentro de las fechas establecidas por la universidad.",
+      "FASE 4 - Pagar los derechos de grado: Cancela el valor de los derechos de grado correspondiente al año en el que te gradúas.",
+      "FASE 5 - Recibir tu título: Una vez verificados y aprobados todos los pasos, estarás listo para recibir tu diploma."
+    ],
+    "required_data": [
+      "Fotocopia de cédula",
+      "Paz y salvo de la biblioteca",
+      "Resultados del ICFES",
+      "Recibo pagado de la Estampilla Pro-Cultura",
+      "Reporte de avance académico"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El estudiante cumple todos los requisitos pero presenta errores en el sistema al inscribirse al grado.",
+        "Hay una discrepancia en el reporte de avance académico."
+      ],
+      "do_not_create_ticket_when": [
+        "El estudiante aún no cumple los requisitos académicos.",
+        "El estudiante no ha reunido los documentos necesarios."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico - UTB",
+      "priority": "alta",
+      "ticket_title_template": "Problema proceso de grado - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] con código [T000] reporta un inconveniente en el proceso de grado: [descripción del problema]."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_certificados_001",
+    "kind": "faq",
+    "title": "¿Cuál es el paso a paso para solicitar un certificado académico en la UTB?",
+    "category": "procesos_academicos",
+    "service": "Solicitud de Certificados Académicos",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "certificado académico",
+      "constancia estudio",
+      "certificado notas",
+      "solicitar certificado",
+      "tramite certificado"
+    ],
+    "user_problem_examples": [
+      "¿Cómo solicito un certificado de estudio?",
+      "Necesito una constancia de notas",
+      "¿Dónde pido mi certificado académico?",
+      "¿Cuánto cuesta un certificado en la UTB?"
+    ],
+    "answer": "La solicitud de certificados académicos sigue un proceso de 4 fases que incluye identificar el tipo, pagar, diligenciar el formulario y recibir el documento en tu correo.",
+    "self_service_steps": [
+      "FASE 1 - Identifica el certificado: Revisa el Catálogo de Certificados para verificar el tipo de documento, su costo y el tiempo de expedición.",
+      "FASE 2 - Realiza el pago: Puedes pagar en línea a través de PSE, presencialmente en la Oficina de Tesorería (Campus Tecnológico) o solicitando un recibo para pago en banco al correo serviciosfinancieros@utb.edu.co.",
+      "FASE 3 - Diligencia la solicitud: Ingresa al formulario en línea, completa tus datos personales exactos (nombres completos e ID de estudiante/cédula) y adjunta el comprobante de pago. Si requieres varios tipos de certificados, debes llenar un formulario independiente por cada uno.",
+      "FASE 4 - Recibe el documento: El certificado será enviado a tu correo institucional (o al personal registrado en Banner) una vez cumplido el tiempo de expedición. Por seguridad, solo se entrega al estudiante titular."
+    ],
+    "required_data": [
+      "Nombres completos",
+      "ID de estudiante o cédula",
+      "Comprobante de pago"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El certificado no llega al correo después del tiempo de expedición indicado.",
+        "Hay un error en los datos del certificado recibido."
+      ],
+      "do_not_create_ticket_when": [
+        "El tiempo de expedición aún no ha vencido.",
+        "El estudiante no ha completado el pago."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Certificado no recibido - [Nombre usuario] - [Tipo certificado]",
+      "ticket_description_template": "El estudiante [nombre] con código [T000] no ha recibido el certificado [tipo] solicitado, habiendo transcurrido el tiempo de expedición indicado."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_ingles_001",
+    "kind": "faq",
+    "title": "¿Qué necesito hacer para realizar el test y conocer mi nivel de inglés?",
+    "category": "procesos_academicos",
+    "service": "Pruebas de Inglés - Centro de Idiomas UTB",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "prueba inglés",
+      "nivel inglés",
+      "test inglés",
+      "clasificación inglés",
+      "examen dominio inglés",
+      "TOEFL",
+      "TOEIC",
+      "IELTS"
+    ],
+    "user_problem_examples": [
+      "¿Cómo sé mi nivel de inglés?",
+      "¿Dónde me inscribo para la prueba de inglés?",
+      "¿Qué prueba de inglés me corresponde?",
+      "Quiero hacer el test de clasificación de inglés"
+    ],
+    "answer": "Dependiendo de tu semestre, debes tomar la Prueba de Clasificación o el Examen de Dominio. En ambos casos, debes inscribirte previamente a través de un formulario en línea.",
+    "self_service_steps": [
+      "PASO 1 - Identifica qué prueba te corresponde: Si eres estudiante de 1er semestre con conocimientos previos, debes tomar la Prueba de Clasificación. Si estás en semestres superiores, debes tomar el Examen de Dominio o presentar resultados de un examen internacional (TOEFL, TOEIC, IELTS o VERSANT).",
+      "PASO 2 - Inscríbete: Diligencia el formulario en línea correspondiente a tu tipo de prueba (Clasificación o Dominio).",
+      "PASO 3 - Realiza el pago: Una vez inscrito, recibirás en tu correo institucional la información sobre el costo y proceso de pago.",
+      "PASO 4 - El día de la prueba: El examen dura 1 hora (evalúa escucha, lectura, gramática y vocabulario). Lleva un documento de identidad válido (cédula física/digital, pasaporte o tarjeta de identidad) y ten claras tus credenciales institucionales."
+    ],
+    "required_data": [
+      "Documento de identidad válido",
+      "Correo institucional y contraseña"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El formulario de inscripción presenta errores técnicos.",
+        "El estudiante no recibe confirmación ni información de pago tras inscribirse."
+      ],
+      "do_not_create_ticket_when": [
+        "El estudiante aún no se ha inscrito.",
+        "El estudiante tiene dudas sobre qué prueba tomar (se resuelve con la información del paso 1)."
+      ]
+    },
+    "escalation": {
+      "target_area": "Centro de Idiomas - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Problema inscripción prueba inglés - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] reporta un problema al inscribirse a la prueba de inglés ([tipo de prueba])."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_carne_001",
+    "kind": "faq",
+    "title": "¿Cómo solicito mi carné estudiantil por primera vez?",
+    "category": "tramites_documentos",
+    "service": "Carné Estudiantil - Admisiones UTB",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "carné estudiantil",
+      "carnet primera vez",
+      "foto carné",
+      "solicitar carné",
+      "admisiones carné"
+    ],
+    "user_problem_examples": [
+      "¿Cómo obtengo mi carné de estudiante?",
+      "¿Qué foto debo enviar para el carné?",
+      "No me han dado el carné y ya estoy matriculado",
+      "¿Dónde recojo mi carné estudiantil?"
+    ],
+    "answer": "El trámite del carné estudiantil por primera vez se inicia automáticamente una vez estás matriculado. Recibirás un correo institucional con instrucciones para enviar tu foto.",
+    "self_service_steps": [
+      "Una vez estés matriculado y con clases inscritas, recibirás un correo institucional para iniciar el trámite.",
+      "Ingresa al enlace del correo y adjunta tu fotografía (a color, fondo blanco, tamaño 3x4, en formato JPG).",
+      "Espera un segundo correo de notificación y pasa a recoger tu carné en la oficina de Admisiones.",
+      "Nota: Enviar la foto es obligatorio. Si no lo haces, tendrás retenciones en Banner y no podrás ver tus notas."
+    ],
+    "required_data": [
+      "Fotografía a color, fondo blanco, tamaño 3x4, formato JPG"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El estudiante no recibió el correo de solicitud de foto tras matricularse.",
+        "El carné no está listo en Admisiones después de la notificación."
+      ],
+      "do_not_create_ticket_when": [
+        "El estudiante aún no ha enviado su fotografía.",
+        "El estudiante no está matriculado aún."
+      ]
+    },
+    "escalation": {
+      "target_area": "Admisiones - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Problema trámite carné primera vez - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] con código [T000] no recibió el correo para solicitar su carné estudiantil o presenta inconvenientes en el proceso."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_carne_002",
+    "kind": "faq",
+    "title": "¿Cómo solicito un duplicado de mi carné estudiantil por pérdida o deterioro?",
+    "category": "tramites_documentos",
+    "service": "Carné Estudiantil - Admisiones UTB",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "duplicado carné",
+      "perdí carné",
+      "carné deteriorado",
+      "reposición carné",
+      "carné perdido"
+    ],
+    "user_problem_examples": [
+      "Perdí mi carné estudiantil, ¿qué hago?",
+      "¿Cuánto cuesta el duplicado del carné?",
+      "Mi carné está dañado y necesito uno nuevo",
+      "¿Cómo pido un reemplazo del carné?"
+    ],
+    "answer": "Puedes solicitar un duplicado de tu carné estudiantil por pérdida o deterioro pagando $52.000 y diligenciando el formulario en línea. Luego lo recoges en Admisiones.",
+    "self_service_steps": [
+      "FASE 1 - Identifica el trámite: Confirma que vas a solicitar el duplicado de carné por pérdida o deterioro.",
+      "FASE 2 - Realiza el pago de $52.000: Puedes pagar en línea a través de PSE, presencialmente en la Oficina de Tesorería (Campus Tecnológico) o solicitando un recibo para pago en banco al correo serviciosfinancieros@utb.edu.co.",
+      "FASE 3 - Diligencia la solicitud: Ingresa al formulario en línea, completa tus datos personales exactos (nombres completos e ID de estudiante/cédula) y adjunta el comprobante de pago.",
+      "FASE 4 - Recoge tu carné: Recibirás una notificación en tu correo institucional para pasar a recoger tu carné en la oficina de Admisiones."
+    ],
+    "required_data": [
+      "Nombres completos",
+      "ID de estudiante o cédula",
+      "Comprobante de pago ($52.000)"
+    ],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El carné no está disponible en Admisiones después del tiempo estimado.",
+        "Hay un error en los datos del carné producido."
+      ],
+      "do_not_create_ticket_when": [
+        "El estudiante aún no ha realizado el pago.",
+        "El estudiante no ha diligenciado el formulario."
+      ]
+    },
+    "escalation": {
+      "target_area": "Admisiones - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Problema duplicado carné - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] con código [T000] reporta un inconveniente con el trámite de duplicado de carné estudiantil."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_reingenieria_001",
+    "kind": "faq",
+    "title": "¿Cuál es el proceso para solicitar una reingeniería o cambio de programa?",
+    "category": "procesos_academicos",
+    "service": "Reingeniería o Cambio de Programa - Dirección de Programa",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "reingeniería",
+      "cambio de carrera",
+      "cambio de programa",
+      "transferencia interna",
+      "cambio facultad"
+    ],
+    "user_problem_examples": [
+      "¿Cómo cambio de carrera?",
+      "Quiero solicitar una reingeniería",
+      "¿Qué debo hacer para cambiar de programa académico?"
+    ],
+    "answer": "El proceso de reingeniería o cambio de programa se gestiona directamente con el Director de tu programa actual, quien te orientará y guiará en todos los pasos del trámite.",
+    "self_service_steps": [
+      "Comunícate o acércate directamente a tu Director de Programa.",
+      "Explícale tu caso e interés en cambiar de programa.",
+      "El Director evaluará tu situación y te brindará orientación personalizada para continuar el trámite."
+    ],
+    "required_data": [],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [],
+      "do_not_create_ticket_when": [
+        "Este proceso se gestiona directamente con el Director de Programa, no a través de TOOLI."
+      ]
+    },
+    "escalation": {
+      "target_area": "Dirección de Programa - UTB",
+      "priority": "normal",
+      "ticket_title_template": "N/A - Gestión directa con Director de Programa",
+      "ticket_description_template": "N/A"
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_prerequisitos_001",
+    "kind": "faq",
+    "title": "¿Cómo consulto si una materia tiene prerrequisitos?",
+    "category": "procesos_academicos",
+    "service": "Portal Banner - Autoservicio Académico",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "prerrequisitos",
+      "requisitos materia",
+      "prerequisito",
+      "materia bloqueada",
+      "inscribir materia prerrequisito"
+    ],
+    "user_problem_examples": [
+      "¿Cómo sé si una materia tiene prerrequisitos?",
+      "¿Qué materias debo ver antes de inscribir X asignatura?",
+      "Me bloquearon una materia, ¿cómo verifico los prerrequisitos?"
+    ],
+    "answer": "Puedes verificar los prerrequisitos de cualquier materia revisando la malla curricular de tu programa directamente en Banner.",
+    "self_service_steps": [
+      "Consulta tu malla curricular en Banner (Alumnos > Inscripción > Planes de estudio de todas las carreras).",
+      "Ubica la materia de tu interés en la malla.",
+      "Si el recuadro de la asignatura contiene etiquetas con códigos que referencian otras materias, significa que tiene prerrequisitos.",
+      "Recuerda que debes haber cursado y aprobado esas asignaturas previas antes de poder inscribir la nueva materia."
+    ],
+    "required_data": [],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El sistema no permite inscribir la materia aunque el estudiante ya cumple los prerrequisitos."
+      ],
+      "do_not_create_ticket_when": [
+        "El estudiante aún no ha aprobado las materias prerrequisito."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Bloqueo incorrecto por prerrequisito - [Nombre usuario] - Materia [materia]",
+      "ticket_description_template": "El estudiante [nombre] con código [T000] no puede inscribir la materia [materia] a pesar de haber aprobado los prerrequisitos requeridos."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_prueba_academica_001",
+    "kind": "faq",
+    "title": "¿Cómo sé si quedé en prueba académica?",
+    "category": "procesos_academicos",
+    "service": "Portal Banner - Autoservicio Académico",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "prueba académica",
+      "PPA",
+      "promedio ponderado",
+      "bajo rendimiento",
+      "cardex académico",
+      "puntos de calidad"
+    ],
+    "user_problem_examples": [
+      "¿Cómo sé si estoy en prueba académica?",
+      "¿Cuál es mi promedio ponderado acumulado?",
+      "¿Dónde veo mi PPA en Banner?",
+      "Creo que estoy en prueba académica, ¿cómo lo verifico?"
+    ],
+    "answer": "Estarás en prueba académica si tu Promedio Ponderado Acumulado (PPA) es de 3.2 o inferior. Puedes verificarlo desde tu Cárdex académico en Banner.",
+    "self_service_steps": [
+      "Ingresa a Banner con tu usuario y contraseña institucional.",
+      "Dirígete a la pestaña 'Alumnos' y selecciona 'Registro de alumnos'.",
+      "Haz clic en 'Cárdex académico' y presiona 'Enviar'.",
+      "Desplázate hasta el campo de tu último periodo cursado y cerrado.",
+      "Ubica la fila 'Acumulativo'. Allí encontrarás tus créditos cursados (Horas PGA), tus Puntos de calidad y tu Promedio Ponderado Acumulado.",
+      "Si el PPA es 3.2 o menor, estás en prueba académica.",
+      "Nota: Con tus Horas PGA y Puntos de calidad puedes usar la calculadora de la universidad para proyectar las notas que necesitas para superar la prueba."
+    ],
+    "required_data": [],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [
+        "El Cárdex académico no muestra información actualizada.",
+        "Hay una discrepancia en el PPA registrado."
+      ],
+      "do_not_create_ticket_when": [
+        "El estudiante solo necesita consultar su PPA (se resuelve con los pasos de autoservicio)."
+      ]
+    },
+    "escalation": {
+      "target_area": "Registro Académico - UTB",
+      "priority": "normal",
+      "ticket_title_template": "Discrepancia en PPA o cárdex - [Nombre usuario]",
+      "ticket_description_template": "El estudiante [nombre] con código [T000] reporta una discrepancia en su Promedio Ponderado Acumulado o en la información de su cárdex académico."
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_bienestar_salud_001",
+    "kind": "faq",
+    "title": "¿Qué servicios de salud o psicología ofrece la UTB y cómo los solicito?",
+    "category": "bienestar_universitario",
+    "service": "Bienestar Universitario - Salud y Psicología",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "salud estudiantes",
+      "enfermería UTB",
+      "psicología UTB",
+      "centro QUID",
+      "bienestar universitario",
+      "cita psicología",
+      "atención médica campus"
+    ],
+    "user_problem_examples": [
+      "¿Dónde está la enfermería de la UTB?",
+      "¿Cómo pido cita con el psicólogo?",
+      "¿La UTB tiene servicio de salud para estudiantes?",
+      "Necesito atención psicológica en la universidad"
+    ],
+    "answer": "La UTB ofrece servicios de enfermería y acompañamiento psicológico para sus estudiantes, ambos ubicados en la Zona T del campus.",
+    "self_service_steps": [
+      "Para atención médica básica (enfermería): Dirígete directamente a la enfermería, ubicada en la planta baja de la Zona T del campus.",
+      "Para acompañamiento psicológico (Centro QUID): Sube las escaleras de la Zona T hasta llegar al Centro de Cuidado Integral QUID. Allí te orientarán para agendar tu cita."
+    ],
+    "required_data": [],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [],
+      "do_not_create_ticket_when": [
+        "Este servicio se accede directamente en la Zona T, no a través de TOOLI."
+      ]
+    },
+    "escalation": {
+      "target_area": "Bienestar Universitario - UTB",
+      "priority": "normal",
+      "ticket_title_template": "N/A - Servicio presencial en Zona T",
+      "ticket_description_template": "N/A"
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
+  },
+  {
+    "id": "kb_bienestar_deportes_001",
+    "kind": "faq",
+    "title": "¿Cómo me inscribo a actividades deportivas o culturales?",
+    "category": "bienestar_universitario",
+    "service": "Bienestar Universitario - Deportes y Cultura",
+    "audience": [
+      "estudiantes"
+    ],
+    "keywords": [
+      "actividades deportivas",
+      "cultura UTB",
+      "gimnasio UTB",
+      "inscripción deporte",
+      "bienestar universitario actividades"
+    ],
+    "user_problem_examples": [
+      "¿Cómo me inscribo al gimnasio de la UTB?",
+      "¿Qué actividades deportivas ofrece la universidad?",
+      "¿Hay clases de danza o música en la UTB?",
+      "¿Cómo accedo a los servicios deportivos del campus?"
+    ],
+    "answer": "La inscripción a actividades deportivas y culturales se gestiona de forma presencial en la Zona T del campus, en la recepción del gimnasio.",
+    "self_service_steps": [
+      "Dirígete a la Zona T del campus.",
+      "Camina hacia el área del gimnasio.",
+      "Acércate a la recepción del gimnasio.",
+      "Pregunta por la oferta de actividades deportivas o culturales disponibles; el personal te explicará los horarios y el proceso para formalizar tu inscripción."
+    ],
+    "required_data": [],
+    "ticket_policy": {
+      "requires_ticket": false,
+      "create_ticket_when": [],
+      "do_not_create_ticket_when": [
+        "Este proceso se realiza de forma presencial en la Zona T, no a través de TOOLI."
+      ]
+    },
+    "escalation": {
+      "target_area": "Bienestar Universitario - UTB",
+      "priority": "normal",
+      "ticket_title_template": "N/A - Gestión presencial en Zona T",
+      "ticket_description_template": "N/A"
+    },
+    "status": "draft",
+    "last_reviewed": "2026-04-18"
   }
 ]
