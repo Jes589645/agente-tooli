@@ -50,6 +50,22 @@ type ToolCall = {
   arguments?: Record<string, unknown>
 }
 
+type TicketArgs = {
+  titulo: string
+  descripcion: string
+  user_email?: string
+  user_name?: string
+}
+
+const ESTADOS_GLPI: Record<number, string> = {
+  1: 'Nuevo',
+  2: 'En curso (Asignado)',
+  3: 'En curso (Planificado)',
+  4: 'En espera',
+  5: 'Resuelto',
+  6: 'Cerrado',
+}
+
 const STOPWORDS = new Set([
   'algo', 'aun', 'como', 'con', 'del', 'esta', 'este', 'los', 'para', 'pero',
   'por', 'que', 'sin', 'todos', 'una', 'intente', 'pasos', 'funciona',
@@ -71,6 +87,17 @@ export async function GET(_request: NextRequest, context: { params: { path?: str
   const path = context.params.path || []
   if (path[0] === 'healthz') {
     return NextResponse.json({ ok: true, model: process.env.LLM_MODEL || 'knowledge-base' })
+  }
+
+  if (path[0] === 'tickets') {
+    const ids = _request.nextUrl.searchParams.get('ids') || ''
+    const ticketIds = ids.split(',').map(id => id.trim()).filter(Boolean)
+    if (ticketIds.length === 0) {
+      return NextResponse.json({ ok: true, tickets: [] })
+    }
+
+    const tickets = await getTicketStatuses(ticketIds)
+    return NextResponse.json({ ok: true, tickets })
   }
 
   return NextResponse.json({ ok: false, error: 'Ruta no soportada' }, { status: 404 })
@@ -97,7 +124,7 @@ export async function POST(request: NextRequest, context: { params: { path?: str
   )
 
   if (canCreateTicket) {
-    const ticketResult = await createTicket(buildTicketArgs(userText, kbMatch || previousKnowledge))
+    const ticketResult = await createTicket(buildTicketArgs(userText, kbMatch || previousKnowledge, payload))
     return NextResponse.json({
       mode: 'tool_call(direct)',
       session_id: sessionId,
@@ -151,7 +178,7 @@ export async function POST(request: NextRequest, context: { params: { path?: str
       }
 
       if (toolCall.name === 'funcionCrearTicket') {
-        const ticketResult = await createTicket(normalizeTicketArgs(toolCall.arguments || {}, userText))
+        const ticketResult = await createTicket(normalizeTicketArgs(toolCall.arguments || {}, userText, payload))
         return NextResponse.json({
           mode: 'tool_call(json)',
           session_id: sessionId,
@@ -257,14 +284,19 @@ function parseToolCall(modelText: string): ToolCall | null {
   return null
 }
 
-function normalizeTicketArgs(args: Record<string, unknown>, userText: string) {
+function normalizeTicketArgs(args: Record<string, unknown>, userText: string, payload: ChatPayload): TicketArgs {
   const titulo = typeof args.titulo === 'string' && args.titulo.trim()
     ? args.titulo.trim()
     : `Solicitud TOOLI - ${userText.slice(0, 80)}`
   const descripcion = typeof args.descripcion === 'string' && args.descripcion.trim()
     ? args.descripcion.trim()
     : userText
-  return { titulo, descripcion }
+  return {
+    titulo,
+    descripcion,
+    user_email: payload.user_email,
+    user_name: payload.user_name,
+  }
 }
 
 function searchKnowledge(userText: string): KnowledgeMatch | null {
@@ -352,11 +384,13 @@ function publicKnowledge(kbMatch: KnowledgeMatch) {
   }
 }
 
-function buildTicketArgs(userText: string, kbMatch: KnowledgeMatch | null) {
+function buildTicketArgs(userText: string, kbMatch: KnowledgeMatch | null, payload: ChatPayload): TicketArgs {
   return {
     titulo: kbMatch?.title ? `Solicitud TOOLI - ${kbMatch.title}` : `Solicitud TOOLI - ${userText.slice(0, 80)}`,
     descripcion: [
       'El usuario solicita escalar el caso a GLPI desde TOOLI.',
+      payload.user_email ? `Correo del usuario autenticado: ${payload.user_email}.` : '',
+      payload.user_name ? `Usuario visible: ${payload.user_name}.` : '',
       `Mensaje actual: ${userText}`,
       kbMatch?.id ? `Caso sugerido por base de conocimiento: ${kbMatch.title} (${kbMatch.id}).` : '',
       kbMatch?.service ? `Servicio relacionado: ${kbMatch.service}.` : '',
@@ -364,7 +398,7 @@ function buildTicketArgs(userText: string, kbMatch: KnowledgeMatch | null) {
   }
 }
 
-async function createTicket(args: { titulo: string; descripcion: string }) {
+async function createTicket(args: TicketArgs) {
   const apiUrl = normalizeGlpiApiUrl(process.env.GLPI_API_URL)
   const appToken = cleanEnv(process.env.GLPI_APP_TOKEN)
   const userToken = cleanEnv(process.env.GLPI_USER_TOKEN)
@@ -403,7 +437,11 @@ async function createTicket(args: { titulo: string; descripcion: string }) {
       body: JSON.stringify({
         input: {
           name: args.titulo,
-          content: args.descripcion,
+          content: [
+            args.user_email ? `Correo del usuario autenticado: ${args.user_email}` : '',
+            args.user_name ? `Usuario visible: ${args.user_name}` : '',
+            args.descripcion,
+          ].filter(Boolean).join('\n\n'),
         },
       }),
     })
@@ -428,10 +466,102 @@ async function createTicket(args: { titulo: string; descripcion: string }) {
     return {
       ok: true,
       ticket_id: data.id,
+      user_email: args.user_email,
+      args,
       resumen: `Se ha creado exitosamente el ticket #${data.id} con el titulo '${args.titulo}'.`,
     }
   } catch (error) {
     return { ok: false, error: `Error de conexion con GLPI: ${String(error)}` }
+  }
+}
+
+async function getTicketStatuses(ticketIds: string[]) {
+  const apiUrl = normalizeGlpiApiUrl(process.env.GLPI_API_URL)
+  const appToken = cleanEnv(process.env.GLPI_APP_TOKEN)
+  const userToken = cleanEnv(process.env.GLPI_USER_TOKEN)
+
+  if (!apiUrl || !appToken || !userToken) {
+    return ticketIds.map(id => ({
+      id,
+      ok: false,
+      error: 'Faltan credenciales de GLPI en Vercel.',
+    }))
+  }
+
+  let sessionToken = ''
+  try {
+    const sessionResponse = await fetch(glpiUrl(apiUrl, 'initSession'), {
+      headers: {
+        'App-Token': appToken,
+        Authorization: `user_token ${userToken}`,
+        Accept: 'application/json',
+      },
+    })
+
+    if (!sessionResponse.ok) {
+      const detail = await responseDetail(sessionResponse)
+      return ticketIds.map(id => ({
+        id,
+        ok: false,
+        error: `No se pudo iniciar sesion en GLPI. Codigo: ${sessionResponse.status}. Detalle: ${detail}`,
+      }))
+    }
+
+    const session = await sessionResponse.json()
+    sessionToken = session.session_token
+    if (!sessionToken || typeof sessionToken !== 'string') {
+      return ticketIds.map(id => ({
+        id,
+        ok: false,
+        error: 'GLPI inicio sesion, pero no devolvio session_token.',
+      }))
+    }
+
+    const tickets = await Promise.all(ticketIds.map(async id => {
+      const response = await fetch(glpiUrl(apiUrl, `Ticket/${encodeURIComponent(id)}`), {
+        headers: {
+          'App-Token': appToken,
+          'Session-Token': sessionToken,
+          Accept: 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        return {
+          id,
+          ok: false,
+          error: `No se pudo consultar el ticket #${id}. Codigo: ${response.status}.`,
+        }
+      }
+
+      const data = await response.json()
+      const statusNumber = Number(data.status)
+      return {
+        id: String(data.id || id),
+        ok: true,
+        title: data.name || 'Sin titulo',
+        status: statusNumber,
+        status_label: ESTADOS_GLPI[statusNumber] || `Desconocido (${statusNumber})`,
+        updated_at: data.date_mod || data.date || null,
+      }
+    }))
+
+    return tickets
+  } catch (error) {
+    return ticketIds.map(id => ({
+      id,
+      ok: false,
+      error: `Error de conexion con GLPI: ${String(error)}`,
+    }))
+  } finally {
+    if (sessionToken) {
+      await fetch(glpiUrl(apiUrl, 'killSession'), {
+        headers: {
+          'App-Token': appToken,
+          'Session-Token': sessionToken,
+        },
+      }).catch(() => undefined)
+    }
   }
 }
 

@@ -89,6 +89,8 @@ async def funcionRevisarTicket(args: dict[str, Any]) -> dict[str, Any]:
 async def funcionCrearTicket(args: dict[str, Any]) -> dict[str, Any]:
     titulo = args.get("titulo", "Ticket creado por IA")
     descripcion = args.get("descripcion", "Generado desde el asistente virtual.")
+    user_email = str(args.get("user_email") or "").strip()
+    user_name = str(args.get("user_name") or "").strip()
 
     if not GLPI_API_URL or not GLPI_APP_TOKEN or not GLPI_USER_TOKEN:
         return {"ok": False, "error": "Faltan credenciales de GLPI en .env"}
@@ -104,7 +106,15 @@ async def funcionCrearTicket(args: dict[str, Any]) -> dict[str, Any]:
         payload = {
             "input": {
                 "name": titulo,
-                "content": descripcion,
+                "content": "\n\n".join(
+                    part
+                    for part in (
+                        f"Correo del usuario autenticado: {user_email}" if user_email else "",
+                        f"Usuario visible: {user_name}" if user_name else "",
+                        descripcion,
+                    )
+                    if part
+                ),
             }
         }
 
@@ -130,10 +140,63 @@ async def funcionCrearTicket(args: dict[str, Any]) -> dict[str, Any]:
             }
 
         resumen = f"Se ha creado exitosamente el ticket #{ticket_id} con el titulo '{titulo}'."
-        return {"ok": True, "resumen": resumen, "args": args, "ticket_id": ticket_id}
+        return {"ok": True, "resumen": resumen, "args": args, "ticket_id": ticket_id, "user_email": user_email}
 
     except Exception as e:
         return {"ok": False, "error": f"Error de conexion con GLPI: {str(e)}"}
+
+
+async def funcionListarEstadosTickets(ticket_ids: list[str]) -> list[dict[str, Any]]:
+    if not GLPI_API_URL or not GLPI_APP_TOKEN or not GLPI_USER_TOKEN:
+        return [
+            {"id": ticket_id, "ok": False, "error": "Faltan credenciales de GLPI en .env"}
+            for ticket_id in ticket_ids
+        ]
+
+    session_token = ""
+    try:
+        session_token = await iniciar_sesion_glpi()
+        headers = {
+            "App-Token": GLPI_APP_TOKEN,
+            "Session-Token": session_token,
+            "Accept": "application/json",
+        }
+
+        tickets: list[dict[str, Any]] = []
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            for ticket_id in ticket_ids:
+                response = await client.get(f"{GLPI_API_URL}/Ticket/{ticket_id}", headers=headers)
+                if response.status_code != 200:
+                    tickets.append(
+                        {
+                            "id": ticket_id,
+                            "ok": False,
+                            "error": f"No se pudo consultar el ticket #{ticket_id}. Codigo: {response.status_code}.",
+                        }
+                    )
+                    continue
+
+                data = response.json()
+                estado_num = data.get("status")
+                tickets.append(
+                    {
+                        "id": str(data.get("id") or ticket_id),
+                        "ok": True,
+                        "title": data.get("name", "Sin titulo"),
+                        "status": estado_num,
+                        "status_label": ESTADOS_GLPI.get(estado_num, f"Desconocido ({estado_num})"),
+                        "updated_at": data.get("date_mod") or data.get("date"),
+                    }
+                )
+
+            await client.get(f"{GLPI_API_URL}/killSession", headers=headers)
+
+        return tickets
+    except Exception as e:
+        return [
+            {"id": ticket_id, "ok": False, "error": f"Error de conexion con GLPI: {str(e)}"}
+            for ticket_id in ticket_ids
+        ]
 
 
 async def funcionSolicitarCambioCurso(args: dict[str, Any]) -> dict[str, Any]:

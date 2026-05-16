@@ -8,6 +8,11 @@ interface ToolResult {
   ok: boolean
   resumen?: string
   error?: string
+  ticket_id?: string | number
+  user_email?: string
+  args?: {
+    titulo?: string
+  }
 }
 
 interface ApiResponse {
@@ -33,6 +38,19 @@ interface ConversationHistoryItem {
   content: string
 }
 
+interface TicketRecord {
+  id: string
+  title: string
+  user_email: string
+  created_at: string
+  status_label?: string
+  updated_at?: string | null
+  ok?: boolean
+  error?: string
+}
+
+type ActiveView = 'chat' | 'tickets'
+
 export default function DashboardPage() {
   const router = useRouter()
   const [userEmail, setUserEmail] = useState('')
@@ -41,6 +59,9 @@ export default function DashboardPage() {
   const [sessionId, setSessionId] = useState('')
   const [lastKnowledgeId, setLastKnowledgeId] = useState('')
   const [loading, setLoading] = useState(false)
+  const [activeView, setActiveView] = useState<ActiveView>('chat')
+  const [tickets, setTickets] = useState<TicketRecord[]>([])
+  const [ticketsLoading, setTicketsLoading] = useState(false)
   const [apiStatus, setApiStatus] = useState('verificando...')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -52,6 +73,13 @@ export default function DashboardPage() {
     setSessionId(getOrCreateSessionId())
     pingApi()
   }, [])
+
+  useEffect(() => {
+    if (!userEmail) return
+    const storedTickets = loadStoredTickets(userEmail)
+    setTickets(storedTickets)
+    if (storedTickets.length) refreshTickets(storedTickets)
+  }, [userEmail])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -89,6 +117,65 @@ export default function DashboardPage() {
     setSessionId(next)
     setLastKnowledgeId('')
     setMessages([])
+    setActiveView('chat')
+  }
+
+  const ticketStorageKey = (email: string) => `tooli_tickets_${email.toLowerCase().trim()}`
+
+  const loadStoredTickets = (email: string): TicketRecord[] => {
+    try {
+      const raw = window.localStorage.getItem(ticketStorageKey(email))
+      if (!raw) return []
+      const parsed = JSON.parse(raw)
+      if (!Array.isArray(parsed)) return []
+      return parsed.filter(item => item?.id && item?.user_email === email)
+    } catch {
+      return []
+    }
+  }
+
+  const persistTickets = (email: string, nextTickets: TicketRecord[]) => {
+    window.localStorage.setItem(ticketStorageKey(email), JSON.stringify(nextTickets))
+  }
+
+  const storeGeneratedTicket = (result: ToolResult) => {
+    if (!userEmail || !result.ticket_id) return
+    const ticketId = String(result.ticket_id)
+    const nextTicket: TicketRecord = {
+      id: ticketId,
+      title: result.args?.titulo || `Ticket #${ticketId}`,
+      user_email: userEmail,
+      created_at: new Date().toISOString(),
+      status_label: 'Creado',
+      ok: true,
+    }
+
+    setTickets(prev => {
+      const withoutDuplicate = prev.filter(ticket => ticket.id !== ticketId)
+      const next = [nextTicket, ...withoutDuplicate]
+      persistTickets(userEmail, next)
+      return next
+    })
+  }
+
+  const refreshTickets = async (sourceTickets = tickets) => {
+    if (!userEmail || sourceTickets.length === 0) return
+    setTicketsLoading(true)
+    try {
+      const ids = sourceTickets.map(ticket => ticket.id).join(',')
+      const r = await fetch(`/api/tooli/tickets?ids=${encodeURIComponent(ids)}`)
+      const data = await r.json()
+      const glpiTickets = Array.isArray(data.tickets) ? data.tickets : []
+      const byId = new Map(glpiTickets.map((ticket: TicketRecord) => [String(ticket.id), ticket]))
+      const next = sourceTickets.map(ticket => {
+        const glpiTicket = byId.get(ticket.id)
+        return glpiTicket ? { ...ticket, ...glpiTicket, user_email: userEmail } : ticket
+      })
+      setTickets(next)
+      persistTickets(userEmail, next)
+    } finally {
+      setTicketsLoading(false)
+    }
   }
 
   const formatReply = (data: ApiResponse): string => {
@@ -129,6 +216,7 @@ export default function DashboardPage() {
         setSessionId(j.session_id)
       }
       if (j.knowledge?.id) setLastKnowledgeId(j.knowledge.id)
+      if (j.tool_result?.ok && j.tool_result.ticket_id) storeGeneratedTicket(j.tool_result)
       setMessages(prev => [...prev, { role: 'bot', text: formatReply(j) }])
     } catch {
       setMessages(prev => [...prev, { role: 'bot', text: 'Error al conectar con la API.' }])
@@ -225,12 +313,17 @@ export default function DashboardPage() {
           display: flex;
           align-items: center;
           gap: 12px;
+          width: 100%;
           min-height: 48px;
           padding: 0 14px;
+          border: 0;
           border-radius: 14px;
+          background: transparent;
           color: var(--navy-soft);
           font-size: 0.96rem;
           font-weight: 600;
+          text-align: left;
+          cursor: pointer;
         }
         .nav-item.active {
           background: var(--blue-soft);
@@ -361,6 +454,60 @@ export default function DashboardPage() {
         .messages {
           padding: 0 32px 24px;
           overflow-y: auto;
+        }
+        .tickets-view {
+          padding: 0 32px 32px;
+          overflow-y: auto;
+        }
+        .tickets-toolbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          margin-bottom: 16px;
+        }
+        .tickets-copy {
+          margin: 0;
+          color: var(--muted);
+          line-height: 1.6;
+        }
+        .ticket-list {
+          display: grid;
+          gap: 12px;
+        }
+        .ticket-card {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 16px;
+          padding: 18px 20px;
+          border: 1px solid var(--line);
+          border-radius: 8px;
+          background: rgba(255,255,255,0.9);
+          box-shadow: 0 14px 34px rgba(15, 23, 42, 0.04);
+        }
+        .ticket-title {
+          margin: 0 0 8px;
+          font-size: 1rem;
+          font-weight: 800;
+        }
+        .ticket-meta {
+          margin: 0;
+          color: var(--muted);
+          font-size: 0.88rem;
+        }
+        .ticket-status {
+          align-self: start;
+          padding: 8px 12px;
+          border-radius: 999px;
+          background: var(--blue-soft);
+          color: var(--blue);
+          font-size: 0.86rem;
+          font-weight: 800;
+          white-space: nowrap;
+        }
+        .ticket-status.error {
+          background: rgba(220, 38, 38, 0.08);
+          color: #b91c1c;
         }
         .empty {
           max-width: 760px;
@@ -522,6 +669,11 @@ export default function DashboardPage() {
             padding-left: 18px;
             padding-right: 18px;
           }
+          .tickets-view {
+            padding-left: 18px;
+            padding-right: 18px;
+          }
+          .ticket-card { grid-template-columns: 1fr; }
           .composer-main { grid-template-columns: 1fr; }
           .actions { justify-content: stretch; }
           .secondary-btn, .send-btn { flex: 1; }
@@ -541,15 +693,15 @@ export default function DashboardPage() {
             </div>
             <button className="new-chat" type="button" onClick={startNewChat}>+ Nueva conversacion</button>
             <nav className="nav">
-              <div className="nav-item active">Base de conocimiento</div>
-              <div className="nav-item">Tickets</div>
-              <div className="nav-item">Automatizaciones</div>
-              <div className="nav-item">Analitica</div>
+              <button className={`nav-item ${activeView === 'chat' ? 'active' : ''}`} type="button" onClick={() => setActiveView('chat')}>Base de conocimiento</button>
+              <button className={`nav-item ${activeView === 'tickets' ? 'active' : ''}`} type="button" onClick={() => { setActiveView('tickets'); refreshTickets() }}>Tickets</button>
+              <button className="nav-item" type="button">Automatizaciones</button>
+              <button className="nav-item" type="button">Analitica</button>
             </nav>
           </div>
           <div className="nav">
-            <div className="nav-item">Configuracion</div>
-            <div className="nav-item">Cerrar sesion</div>
+            <button className="nav-item" type="button">Configuracion</button>
+            <button className="nav-item" type="button" onClick={handleLogout}>Cerrar sesion</button>
           </div>
         </aside>
 
@@ -588,37 +740,75 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="messages" aria-live="polite">
-            {messages.length === 0 ? (
-              <div className="empty">
-                Hola. Empieza una conversacion con TOOLI para consultar servicios,
-                resolver dudas frecuentes o validar si un caso realmente necesita ticket.
-                Prueba con: <em>Tengo un solapamiento en mi horario de matricula</em>
+          {activeView === 'tickets' ? (
+            <section className="tickets-view" aria-live="polite">
+              <div className="tickets-toolbar">
+                <p className="tickets-copy">
+                  Tickets generados por {userEmail || 'el usuario autenticado'} desde TOOLI.
+                </p>
+                <button className="secondary-btn" type="button" onClick={() => refreshTickets()} disabled={ticketsLoading || tickets.length === 0}>
+                  {ticketsLoading ? 'Actualizando...' : 'Actualizar'}
+                </button>
               </div>
-            ) : (
-              messages.map((msg, i) => (
-                <div key={i} className={`row ${msg.role}`}>
-                  {msg.role === 'bot' && <div className="message-mark">AI</div>}
+              {tickets.length === 0 ? (
+                <div className="empty">
+                  Todavia no hay tickets creados desde esta sesion de usuario. Cuando TOOLI radique uno en GLPI, aparecera aqui ligado a tu correo.
+                </div>
+              ) : (
+                <div className="ticket-list">
+                  {tickets.map(ticket => (
+                    <article className="ticket-card" key={ticket.id}>
+                      <div>
+                        <p className="ticket-title">#{ticket.id} · {ticket.title}</p>
+                        <p className="ticket-meta">
+                          Usuario: {ticket.user_email} · Creado: {new Date(ticket.created_at).toLocaleString()}
+                        </p>
+                        {ticket.updated_at && (
+                          <p className="ticket-meta">Ultima actualizacion GLPI: {ticket.updated_at}</p>
+                        )}
+                        {ticket.error && <p className="ticket-meta">{ticket.error}</p>}
+                      </div>
+                      <span className={`ticket-status ${ticket.ok === false ? 'error' : ''}`}>
+                        {ticket.ok === false ? 'Sin consultar' : ticket.status_label || 'Creado'}
+                      </span>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+          ) : (
+            <div className="messages" aria-live="polite">
+              {messages.length === 0 ? (
+                <div className="empty">
+                  Hola. Empieza una conversacion con TOOLI para consultar servicios,
+                  resolver dudas frecuentes o validar si un caso realmente necesita ticket.
+                  Prueba con: <em>Tengo un solapamiento en mi horario de matricula</em>
+                </div>
+              ) : (
+                messages.map((msg, i) => (
+                  <div key={i} className={`row ${msg.role}`}>
+                    {msg.role === 'bot' && <div className="message-mark">AI</div>}
+                    <div className="bubble-wrap">
+                      <div className="bubble">{msg.text}</div>
+                      <div className="timestamp">{msg.role === 'bot' ? 'Asistente TOOLI' : 'Ahora'}</div>
+                    </div>
+                    {msg.role === 'user' && <div className="message-mark">Tu</div>}
+                  </div>
+                ))
+              )}
+              {loading && (
+                <div className="row bot">
+                  <div className="message-mark">AI</div>
                   <div className="bubble-wrap">
-                    <div className="bubble">{msg.text}</div>
-                    <div className="timestamp">{msg.role === 'bot' ? 'Asistente TOOLI' : 'Ahora'}</div>
-                  </div>
-                  {msg.role === 'user' && <div className="message-mark">Tu</div>}
-                </div>
-              ))
-            )}
-            {loading && (
-              <div className="row bot">
-                <div className="message-mark">AI</div>
-                <div className="bubble-wrap">
-                  <div className="bubble typing">
-                    <span /><span /><span />
+                    <div className="bubble typing">
+                      <span /><span /><span />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+          )}
 
           <div className="composer-shell">
             <form className="composer" onSubmit={handleSubmit} autoComplete="off">
@@ -641,7 +831,7 @@ export default function DashboardPage() {
                   />
                 </label>
                 <div className="actions">
-                  <button className="secondary-btn" type="button">Borrador</button>
+                  <button className="secondary-btn" type="button" onClick={() => { setActiveView('tickets'); refreshTickets() }}>Tickets</button>
                   <button className="send-btn" type="submit" disabled={loading || !input.trim()}>
                     Enviar
                   </button>

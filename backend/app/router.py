@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from pydantic import BaseModel
 import json
 
@@ -21,6 +21,8 @@ router = APIRouter()
 class ChatIn(BaseModel):
     message: str
     session_id: str | None = None
+    user_email: str | None = None
+    user_name: str | None = None
 
 
 @router.post("/chat")
@@ -44,7 +46,7 @@ async def chat(payload: ChatIn):
     )
 
     if can_create_ticket:
-        args = build_ticket_args(user_text, kb_match or prior_kb_match, history_entries)
+        args = build_ticket_args(user_text, kb_match or prior_kb_match, history_entries, payload)
         tool_result = await run_tool("funcionCrearTicket", args)
         reply = format_tool_reply(tool_result)
         append_message(session_id, "assistant", reply, {"mode": "tool_call(direct)", "tool_name": "funcionCrearTicket"})
@@ -118,6 +120,11 @@ async def chat(payload: ChatIn):
                     "reply": reply,
                 }
             args = tool_call.get("arguments", {})
+            if isinstance(args, dict):
+                if payload.user_email:
+                    args["user_email"] = payload.user_email
+                if payload.user_name:
+                    args["user_name"] = payload.user_name
             tool_result = await run_tool(name, args)
             reply = format_tool_reply(tool_result)
             append_message(session_id, "assistant", reply, {"mode": "tool_call(json)", "tool_name": name})
@@ -144,7 +151,13 @@ async def chat(payload: ChatIn):
                 "model_raw": model_text,
                 "reply": reply,
             }
-        tool_result = await run_tool(inline, {})
+        tool_result = await run_tool(
+            inline,
+            {
+                "user_email": payload.user_email or "",
+                "user_name": payload.user_name or "",
+            },
+        )
         reply = format_tool_reply(tool_result)
         append_message(session_id, "assistant", reply, {"mode": "tool_call(inline)", "tool_name": inline})
         return {
@@ -168,6 +181,14 @@ async def chat(payload: ChatIn):
         "request": user_text,
         "reply": model_text,
     }
+
+
+@router.get("/tickets")
+async def tickets(ids: str = Query(default="")):
+    ticket_ids = [item.strip() for item in ids.split(",") if item.strip()]
+    if not ticket_ids:
+        return {"ok": True, "tickets": []}
+    return {"ok": True, "tickets": await tools.funcionListarEstadosTickets(ticket_ids)}
 
 
 async def run_tool(name: str, args: dict):
@@ -234,7 +255,7 @@ def public_knowledge(kb_match: dict) -> dict:
     }
 
 
-def build_ticket_args(user_text: str, kb_match: dict | None, entries: list[dict]) -> dict[str, str]:
+def build_ticket_args(user_text: str, kb_match: dict | None, entries: list[dict], payload: ChatIn) -> dict[str, str]:
     if kb_match:
         title = f"Solicitud TOOLI - {kb_match.get('title') or kb_match.get('category') or 'Soporte'}"
     else:
@@ -250,8 +271,12 @@ def build_ticket_args(user_text: str, kb_match: dict | None, entries: list[dict]
 
     description_parts = [
         f"El usuario solicita escalar el caso a GLPI desde TOOLI.",
-        f"Mensaje actual: {user_text}",
     ]
+    if payload.user_email:
+        description_parts.append(f"Correo del usuario autenticado: {payload.user_email}.")
+    if payload.user_name:
+        description_parts.append(f"Usuario visible: {payload.user_name}.")
+    description_parts.append(f"Mensaje actual: {user_text}")
     if kb_match:
         description_parts.append(f"Caso sugerido por base de conocimiento: {kb_match.get('title')} ({kb_match.get('id')}).")
         if kb_match.get("service"):
@@ -262,6 +287,8 @@ def build_ticket_args(user_text: str, kb_match: dict | None, entries: list[dict]
     return {
         "titulo": title,
         "descripcion": "\n\n".join(description_parts),
+        "user_email": payload.user_email or "",
+        "user_name": payload.user_name or "",
     }
 
 
