@@ -365,29 +365,35 @@ function buildTicketArgs(userText: string, kbMatch: KnowledgeMatch | null) {
 }
 
 async function createTicket(args: { titulo: string; descripcion: string }) {
-  const apiUrl = process.env.GLPI_API_URL
-  const appToken = process.env.GLPI_APP_TOKEN
-  const userToken = process.env.GLPI_USER_TOKEN
+  const apiUrl = normalizeGlpiApiUrl(process.env.GLPI_API_URL)
+  const appToken = cleanEnv(process.env.GLPI_APP_TOKEN)
+  const userToken = cleanEnv(process.env.GLPI_USER_TOKEN)
 
   if (!apiUrl || !appToken || !userToken) {
     return { ok: false, error: 'Faltan credenciales de GLPI en Vercel.' }
   }
 
   try {
-    const sessionResponse = await fetch(`${apiUrl}/initSession`, {
+    const sessionResponse = await fetch(glpiUrl(apiUrl, 'initSession'), {
       headers: {
         'App-Token': appToken,
         Authorization: `user_token ${userToken}`,
+        Accept: 'application/json',
       },
     })
 
     if (!sessionResponse.ok) {
-      return { ok: false, error: `No se pudo iniciar sesion en GLPI. Codigo: ${sessionResponse.status}` }
+      const detail = await responseDetail(sessionResponse)
+      return { ok: false, error: `No se pudo iniciar sesion en GLPI. Codigo: ${sessionResponse.status}. Detalle: ${detail}` }
     }
 
     const session = await sessionResponse.json()
     const sessionToken = session.session_token
-    const response = await fetch(`${apiUrl}/Ticket`, {
+    if (!sessionToken || typeof sessionToken !== 'string') {
+      return { ok: false, error: 'GLPI inicio sesion, pero no devolvio session_token.' }
+    }
+
+    const response = await fetch(glpiUrl(apiUrl, 'Ticket'), {
       method: 'POST',
       headers: {
         'App-Token': appToken,
@@ -402,7 +408,7 @@ async function createTicket(args: { titulo: string; descripcion: string }) {
       }),
     })
 
-    await fetch(`${apiUrl}/killSession`, {
+    await fetch(glpiUrl(apiUrl, 'killSession'), {
       headers: {
         'App-Token': appToken,
         'Session-Token': sessionToken,
@@ -410,7 +416,8 @@ async function createTicket(args: { titulo: string; descripcion: string }) {
     }).catch(() => undefined)
 
     if (!response.ok) {
-      return { ok: false, error: `Hubo un problema al crear el ticket en GLPI. Codigo: ${response.status}` }
+      const detail = await responseDetail(response)
+      return { ok: false, error: `Hubo un problema al crear el ticket en GLPI. Codigo: ${response.status}. Detalle: ${detail}` }
     }
 
     const data = await response.json()
@@ -426,6 +433,23 @@ async function createTicket(args: { titulo: string; descripcion: string }) {
   } catch (error) {
     return { ok: false, error: `Error de conexion con GLPI: ${String(error)}` }
   }
+}
+
+function cleanEnv(value?: string): string {
+  return (value || '').trim().replace(/^['"]|['"]$/g, '')
+}
+
+function normalizeGlpiApiUrl(value?: string): string {
+  return cleanEnv(value).replace(/\/+$/, '')
+}
+
+function glpiUrl(apiUrl: string, path: string): string {
+  return `${apiUrl}/${path.replace(/^\/+/, '')}`
+}
+
+async function responseDetail(response: Response): Promise<string> {
+  const body = (await response.text().catch(() => '')).replace(/\s+/g, ' ').trim()
+  return body ? body.slice(0, 500) : response.statusText || 'sin detalle'
 }
 
 function normalize(value: string): string {

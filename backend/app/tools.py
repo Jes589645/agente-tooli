@@ -4,9 +4,13 @@ from typing import Any
 import httpx
 
 
-GLPI_API_URL = os.getenv("GLPI_API_URL")
-GLPI_APP_TOKEN = os.getenv("GLPI_APP_TOKEN")
-GLPI_USER_TOKEN = os.getenv("GLPI_USER_TOKEN")
+def clean_env(value: str | None) -> str:
+    return (value or "").strip().strip("'\"")
+
+
+GLPI_API_URL = clean_env(os.getenv("GLPI_API_URL")).rstrip("/")
+GLPI_APP_TOKEN = clean_env(os.getenv("GLPI_APP_TOKEN"))
+GLPI_USER_TOKEN = clean_env(os.getenv("GLPI_USER_TOKEN"))
 
 ESTADOS_GLPI = {
     1: "Nuevo",
@@ -22,11 +26,17 @@ async def iniciar_sesion_glpi() -> str:
     headers = {
         "App-Token": GLPI_APP_TOKEN,
         "Authorization": f"user_token {GLPI_USER_TOKEN}",
+        "Accept": "application/json",
     }
     async with httpx.AsyncClient(timeout=30.0) as client:
         response = await client.get(f"{GLPI_API_URL}/initSession", headers=headers)
-        response.raise_for_status()
-        return response.json().get("session_token")
+        if response.status_code != 200:
+            detail = " ".join(response.text.split())[:500] or response.reason_phrase
+            raise RuntimeError(f"No se pudo iniciar sesion en GLPI. Codigo: {response.status_code}. Detalle: {detail}")
+        session_token = response.json().get("session_token")
+        if not session_token:
+            raise RuntimeError("GLPI inicio sesion, pero no devolvio session_token.")
+        return session_token
 
 
 async def funcionRevisarTicket(args: dict[str, Any]) -> dict[str, Any]:
